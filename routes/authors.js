@@ -13,4 +13,6 @@ router.get('/new', (req, res) => {
 
 router.post('/', (req, res) => {
     res.send('Create author');
-})
+});
+
+module.exports = router;

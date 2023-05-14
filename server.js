@@ -5,6 +5,7 @@ dotenv.config();
 
 const expressLayouts = require('express-ejs-layouts');
 const indexRouter = require('./routes/index');
+const authorsRouter = require('./routes/authors');
 const dbService = require('./dbService');
 
 
@@ -14,6 +15,7 @@ app.set('layout', 'layouts/layout');
 app.use(expressLayouts);
 app.use(express.static('public'));
 app.use('/', indexRouter);
+app.use('/authors', authorsRouter);
 
 app.listen(process.env.PORT || 3000,
     () => console.log('On http://localhost:3000'));

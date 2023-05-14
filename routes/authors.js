@@ -12,7 +12,8 @@ router.get('/new', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    res.send('Create author');
+
+    res.send(req.body.name);
 });
 
 module.exports = router;

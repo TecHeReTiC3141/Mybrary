@@ -14,4 +14,17 @@ connection.connect(err => {
     else {
         console.log(`db successfully connected`);
     }
-})
+});
+
+class DbService {
+
+    connection = connection;
+    static instance = null;
+
+    static getInstance() {
+        return (this.instance ? this.instance : this.instance = new DbService());
+    }
+}
+
+
+module.exports = DbService;

@@ -6,8 +6,7 @@ dotenv.config();
 const expressLayouts = require('express-ejs-layouts');
 const indexRouter = require('./routes/index');
 const authorsRouter = require('./routes/authors');
-const dbService = require('./dbService');
-
+const connection = require('./dbService');
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');

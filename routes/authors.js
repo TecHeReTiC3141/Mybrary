@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Author = require('../models/authors');
 
 // Get all authors
 router.get('/', (req, res) => {
@@ -11,9 +12,12 @@ router.get('/new', (req, res) => {
     res.render('authors/new');
 });
 
-router.post('/', (req, res) => {
-
-    res.send(req.body.name);
+router.post('/', async (req, res) => {
+    console.log('on new post');
+    let newAuthor = await Author.create({ name: req.body.name,
+                                                age: +req.body.age });
+    console.log(newAuthor.toJSON());
+    res.send(`${newAuthor.toJSON()} successfully created`);
 });
 
 module.exports = router;

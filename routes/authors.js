@@ -13,11 +13,22 @@ router.get('/new', (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    console.log('on new post');
-    let newAuthor = await Author.create({ name: req.body.name,
-                                                age: +req.body.age });
-    console.log(newAuthor.toJSON());
-    res.send(`${newAuthor.toJSON()} successfully created`);
-});
+
+    try {
+        let newAuthor = await Author.create({
+            name: req.body.name,
+            age: +req.body.age
+        });
+        console.log(newAuthor.toJSON());
+        console.log('on new post');
+        res.redirect('/authors'); // then to author profile page
+        // res.redirect(`/authors/${newAuthor.id}`); // then to author profile page
+    } catch (err) {
+        console.log(`Error while creating new author: ${err.message}`);
+        res.render('authors/new', {
+            errorMessage: `Error while creating new author: ${err.message}`
+        });
+    }
+ });
 
 module.exports = router;

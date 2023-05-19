@@ -15,6 +15,11 @@ const Author = connection.define('author', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            len: [2, 50],
+        },
+        trim: true,
+
     },
     age: {
         type: DataTypes.INTEGER,

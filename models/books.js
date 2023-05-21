@@ -3,6 +3,7 @@ dotenv.config();
 
 const connection = require('../dbService');
 const { DataTypes } = require('sequelize');
+
 const Author = require('../models/authors');
 
 const Book = connection.define('book', {
@@ -39,11 +40,15 @@ const Book = connection.define('book', {
     }
 });
 
-Author.hasMany(Book);
+Author.hasMany(Book, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+});
 Book.belongsTo(Author);
 
-Book.sync({ force: true }).then(() =>
-    console.log("The table for the Book was just recreated!"));
+//
+// Book.sync().then(() =>
+//     console.log("The table for the Book was just recreated!"));
 
 
 module.exports = Book;

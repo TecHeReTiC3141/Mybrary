@@ -26,9 +26,9 @@ const Author = connection.define('author', {
         allowNull: false,
     },
 });
-
-Author.sync({ force: true }).then(() =>
-    console.log("The table for the Author was just recreated!"));
+//
+// Author.sync({ force: true }).then(() =>
+//     console.log("The table for the Author was just recreated!"));
 
 
 module.exports = Author;

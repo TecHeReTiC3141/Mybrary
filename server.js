@@ -2,12 +2,16 @@ const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
-
 const expressLayouts = require('express-ejs-layouts');
+
 const indexRouter = require('./routes/index');
 const authorsRouter = require('./routes/authors');
 const booksRouter = require('./routes/books');
-const connection = require('./dbService');
+
+const sequelize = require('./dbService');
+
+sequelize.sync({ force: true })
+    .then(() => console.log("All models were synchronized successfully."));
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');

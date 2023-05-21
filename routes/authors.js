@@ -10,23 +10,24 @@ router.get('/', async (req, res) => {
         if (req.query.pattern ) {
             let reg = req.query.pattern.toLowerCase();
             authors = await Author.findAll({
-                    where: {
-                        [Op.and]: [
-                            Sequelize.where(
-                                Sequelize.fn('lower', Sequelize.col('name')),
-                                {
-                                    [Op.like]: `%${reg}%`
-                                }
-                            )
-                        ]
-                    }
-                });
+                attributes: ['name'],
+                where: {
+                    [Op.and]: [
+                        Sequelize.where(
+                            Sequelize.fn('lower', Sequelize.col('name')),
+                            {
+                                [Op.like]: `%${reg}%`
+                            }
+                        )
+                    ]
+                }
+            });
         } else {
             authors = await Author.findAll();
         }
 
-
-        res.render('authors/index', { authors });
+        res.render('authors/index', { authors,
+            pattern: req.query.pattern });
     } catch (err) {
         console.log(err.message);
         res.redirect('/');
@@ -35,7 +36,7 @@ router.get('/', async (req, res) => {
 
 // New authors form
 router.get('/new', (req, res) => {
-    res.render('authors/new');
+    res.render('authors/new', { author: {}});
 });
 
 router.post('/', async (req, res) => {
@@ -51,7 +52,11 @@ router.post('/', async (req, res) => {
     } catch (err) {
         console.log(`Error while creating new author: ${err.message}`);
         res.render('authors/new', {
-            errorMessage: `Error while creating new author: ${err.message}`
+            errorMessage: `Error while creating new author: ${err.message}`,
+            author: {
+                name: req.body.name,
+                age: +req.body.age
+            }
         });
     }
  });

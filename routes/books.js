@@ -1,16 +1,24 @@
 const express = require('express');
 const router = express.Router();
+const Author = require('../models/authors');
 const Book = require('../models/books');
 const { Sequelize, Op } = require('sequelize');
 
 // Get all books
 router.get('/', async (req, res) => {
-    res.send('All books');
+    res.render('books/index', { pattern: null, books: [] });
 });
 
 // New books form
-router.get('/new', (req, res) => {
-    res.send('New books');
+router.get('/new', async (req, res) => {
+    try {
+        res.render('books/new', { book: {},
+            authors: await Author.findAll(),
+        });
+    } catch (err) {
+        console.log(err);
+        res.redirect('/books');
+    }
 
 });
 

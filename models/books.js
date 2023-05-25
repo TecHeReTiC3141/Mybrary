@@ -3,6 +3,7 @@ dotenv.config();
 
 const connection = require('../dbService');
 const { DataTypes } = require('sequelize');
+const path = require('path');
 
 const Author = require('../models/authors');
 
@@ -39,6 +40,12 @@ const Book = connection.define('book', {
     coverImageName: {
         type: DataTypes.STRING,
         allowNull: false,
+    },
+    coverImagePath: {
+        type: new DataTypes.VIRTUAL(DataTypes.STRING, ['coverImageName']),
+        get: function() {
+            return path.join('/', coverImageRootPath, this.get('coverImageName'));
+        }
     }
 });
 

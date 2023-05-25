@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
 const router = express.Router();
 const Author = require('../models/authors');
@@ -20,6 +21,7 @@ const upload = multer({
 // Get all books
 router.get('/', async (req, res) => {
     try {
+
         res.render('books/index',
             {pattern: null, books: await Book.findAll()});
     } catch (err) {
@@ -40,8 +42,9 @@ router.get('/new', async (req, res) => {
 });
 
 router.post('/', upload.single('cover'), async (req, res) => {
-    const fileName = req.file !== null ? req.file.filename : null;
-    let book;
+    const fileName = req.file !== null && req.file !== undefined
+        ? req.file.filename : null;
+    let book = {};
     try {
         book = await Book.create({
             title: req.body.title,
@@ -53,14 +56,30 @@ router.post('/', upload.single('cover'), async (req, res) => {
         });
         res.redirect('/books');
     } catch (err) {
+        if (fileName) {
+            removeCoverFile(fileName);
+        }
         await createNewBookPage({
             res,
-            book,
+            book: {
+                title: req.body.title,
+                author: req.body.author,
+                publishDate: new Date(req.body.publishDate),
+                pageCount: req.body.pageCount,
+                description: req.body.description,
+                coverImageName: fileName,
+            },
             error: err,
         })
     }
 
 });
+
+function removeCoverFile(coverImageName) {
+    fs.unlink(path.join(uploadPath, coverImageName), err => {
+        if (err) console.error(err);
+    });
+}
 
 async function createNewBookPage({res, book, error = null}) {
     try {

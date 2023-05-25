@@ -1,6 +1,6 @@
 <div>
     <label>Title:
-        <input type="text" name="name" id="name" value="<%= book?.title %>">
+        <input type="text" name="title" id="title" value="<%= book?.title %>">
     </label>
 </div>
 
@@ -21,7 +21,8 @@
 <div>
     <label>Publish Date:
         <input type="date" name="publishDate" id="publishDate"
-               value="<%= book?.publishDate === null || book?.publishDate === undefined ? '': book.publishDate.toISOString().split('T')[0] %>">
+               value="<%= book?.publishDate === null || book?.publishDate === undefined ? ''
+                       : book.publishDate.toISOString().split('T')[0] %>">
     </label>
 </div>
 

@@ -6,6 +6,8 @@ const { DataTypes } = require('sequelize');
 
 const Author = require('../models/authors');
 
+const coverImageRootPath = 'uploads/bookCovers';
+
 const Book = connection.define('book', {
     ID: {
         type: DataTypes.INTEGER,
@@ -51,4 +53,4 @@ Book.belongsTo(Author);
 //     console.log("The table for the Book was just recreated!"));
 
 
-module.exports = Book;
+module.exports = { Book, coverImageRootPath };

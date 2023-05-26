@@ -1,5 +1,4 @@
 const express = require('express');
-const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
@@ -11,12 +10,12 @@ const {Sequelize, Op} = require('sequelize');
 const uploadPath = path.join('public', coverImageRootPath);
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif',]
 
-const upload = multer({
-    dest: uploadPath,
-    fileFilter: (req, file, callback) => {
-        callback(null, imageMimeTypes.includes(file.mimetype));
-    }
-})
+// const upload = multer({
+//     dest: uploadPath,
+//     fileFilter: (req, file, callback) => {
+//         callback(null, imageMimeTypes.includes(file.mimetype));
+//     }
+// })
 
 // Get all books
 router.get('/', async (req, res) => {
@@ -87,24 +86,19 @@ router.get('/new', async (req, res) => {
 
 });
 
-router.post('/', upload.single('cover'), async (req, res) => {
-    const fileName = req.file !== null && req.file !== undefined
-        ? req.file.filename : null;
+router.post('/', async (req, res) => {
     let book = {};
     try {
-        book = await Book.create({
+        book = await Book.build({
             title: req.body.title,
             author: req.body.author,
             publishDate: new Date(req.body.publishDate),
             pageCount: req.body.pageCount,
             description: req.body.description,
-            coverImageName: fileName,
         });
+        await saveCover(book, req.body.cover);
         res.redirect('/books');
     } catch (err) {
-        if (fileName) {
-            removeCoverFile(fileName);
-        }
         await createNewBookPage({
             res,
             book: {
@@ -113,7 +107,6 @@ router.post('/', upload.single('cover'), async (req, res) => {
                 publishDate: new Date(req.body.publishDate),
                 pageCount: req.body.pageCount,
                 description: req.body.description,
-                coverImageName: fileName,
             },
             error: err,
         })
@@ -121,10 +114,16 @@ router.post('/', upload.single('cover'), async (req, res) => {
 
 });
 
-function removeCoverFile(coverImageName) {
-    fs.unlink(path.join(uploadPath, coverImageName), err => {
-        if (err) console.error(err);
-    });
+async function saveCover(book, coverEncoded) {
+    if (!coverEncoded) return;
+    const cover = JSON.parse(coverEncoded);
+    console.log(cover);
+    if (cover !== null && imageMimeTypes.includes(cover.type)) {
+        book.coverImage = new Buffer.from(cover.data, 'base64');
+        book.coverImageType = cover.type;
+        await book.save();
+    }
+
 }
 
 async function createNewBookPage({res, book, error = null}) {

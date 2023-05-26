@@ -37,16 +37,14 @@ const Book = connection.define('book', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    coverImageName: {
+    coverImage: {
+        type: DataTypes.BLOB('long'),
+        allowNull: false,
+    },
+    coverImageType: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    coverImagePath: {
-        type: new DataTypes.VIRTUAL(DataTypes.STRING, ['coverImageName']),
-        get: function() {
-            return path.join('/', coverImageRootPath, this.get('coverImageName'));
-        }
-    }
 });
 
 Author.hasMany(Book, {

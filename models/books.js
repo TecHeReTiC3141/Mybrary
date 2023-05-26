@@ -7,8 +7,6 @@ const path = require('path');
 
 const Author = require('../models/authors');
 
-const coverImageRootPath = 'uploads/bookCovers';
-
 const Book = connection.define('book', {
     ID: {
         type: DataTypes.INTEGER,
@@ -45,6 +43,16 @@ const Book = connection.define('book', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    coverImagePath: {
+        type: DataTypes.VIRTUAL(DataTypes.STRING,
+            ['coverImage', 'coverImageType']),
+        get: function() {
+            if (this.coverImage !== null && this.coverImageType !== null) {
+                return `data:${this.coverImageType};charset=utf-8;base64,
+                ${this.coverImage.toString('base64')}`
+            }
+        }
+    }
 });
 
 Author.hasMany(Book, {
@@ -58,4 +66,4 @@ Book.belongsTo(Author);
 //     console.log("The table for the Book was just recreated!"));
 
 
-module.exports = { Book, coverImageRootPath };
+module.exports = Book;

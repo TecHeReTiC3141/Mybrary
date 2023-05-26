@@ -20,14 +20,56 @@ const upload = multer({
 
 // Get all books
 router.get('/', async (req, res) => {
+    // Creating search query
+    const where = {
+        [Op.and]: []
+    };
+    let symbols = Object.getOwnPropertySymbols(where);
+
+
+    if (req.query.title) {
+        const reg = req.query.title.toLowerCase();
+        where[symbols[0]].push(
+            Sequelize.where(
+                Sequelize.fn('lower', Sequelize.col('title')),
+                {
+                    [Op.like]: `%${reg}%`
+                }
+            )
+        )
+    }
+    if (req.query.publishedAfter) {
+        where[symbols[0]].push({
+                publishDate: {
+                    [Op.gte]: req.query.publishedAfter,
+                }
+            }
+        )
+    }
+    if (req.query.publishedBefore) {
+        where[symbols[0]].push({
+                publishDate: {
+                    [Op.lte]: req.query.publishedBefore,
+                }
+            }
+        )
+    }
+
     try {
         let searchOptions = {
             title: req.query.title,
             publishedAfter: req.query.publishedAfter,
             publishedBefore: req.query.publishedBefore,
         }
+        const books = await Book.findAll({
+            where
+        });
         res.render('books/index',
-            {searchOptions, books: await Book.findAll()});
+            {
+                searchOptions,
+                books,
+                entriesCol: books.length,
+            });
     } catch (err) {
         res.render('index', {
             errorMessage: err.message,

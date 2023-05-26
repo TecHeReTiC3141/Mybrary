@@ -3,6 +3,8 @@ dotenv.config();
 
 const connection = require('../dbService');
 const { DataTypes } = require('sequelize');
+const path = require('path');
+
 const Author = require('../models/authors');
 
 const Book = connection.define('book', {
@@ -33,17 +35,35 @@ const Book = connection.define('book', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    coverImageName: {
+    coverImage: {
+        type: DataTypes.BLOB('long'),
+        allowNull: false,
+    },
+    coverImageType: {
         type: DataTypes.STRING,
         allowNull: false,
+    },
+    coverImagePath: {
+        type: DataTypes.VIRTUAL(DataTypes.STRING,
+            ['coverImage', 'coverImageType']),
+        get: function() {
+            if (this.coverImage !== null && this.coverImageType !== null) {
+                return `data:${this.coverImageType};charset=utf-8;base64,
+                ${this.coverImage.toString('base64')}`
+            }
+        }
     }
 });
 
-Author.hasMany(Book);
+Author.hasMany(Book, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+});
 Book.belongsTo(Author);
 
-Book.sync({ force: true }).then(() =>
-    console.log("The table for the Book was just recreated!"));
+//
+// Book.sync().then(() =>
+//     console.log("The table for the Book was just recreated!"));
 
 
 module.exports = Book;

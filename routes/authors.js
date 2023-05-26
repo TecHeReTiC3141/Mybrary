@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const Author = require('../models/authors');
-const { Sequelize, Op } = require('sequelize');
+const {Sequelize, Op} = require('sequelize');
 
 // Get all authors
 router.get('/', async (req, res) => {
     try {
         let authors;
-        if (req.query.pattern ) {
+        if (req.query.pattern) {
             let reg = req.query.pattern.toLowerCase();
             authors = await Author.findAll({
                 attributes: ['name'],
@@ -26,8 +26,10 @@ router.get('/', async (req, res) => {
             authors = await Author.findAll();
         }
 
-        res.render('authors/index', { authors,
-            pattern: req.query.pattern });
+        res.render('authors/index', {
+            authors,
+            pattern: req.query.pattern
+        });
     } catch (err) {
         console.log(err.message);
         res.redirect('/');
@@ -36,7 +38,7 @@ router.get('/', async (req, res) => {
 
 // New authors form
 router.get('/new', (req, res) => {
-    res.render('authors/new', { author: {}});
+    res.render('authors/new', {author: {}});
 });
 
 router.post('/', async (req, res) => {
@@ -59,6 +61,32 @@ router.post('/', async (req, res) => {
             }
         });
     }
- });
+});
+
+router.route('/:id')
+    .get(async (req, res) => {
+        try {
+            const author = await Author.findOne({
+                where: {
+                    id: req.params.id,
+                }
+            });
+            if (author === null) {
+                res.redirect('/authors');
+            } else {
+                res.send(`This is author ID ${author.ID}, name ${author.name}`);
+            }
+        } catch (err) {
+            res.redirect('/authors');
+        }
+    }).put( async (req, res) => {
+        res.send(`Edit author ID ${req.params.id}`);
+    }).delete( async (req, res) => {
+        res.send(`Delete author ID ${req.params.id}`);
+});
+
+router.get('/:id/edit', async (req, res) => {
+    res.send(`Edit author ID ${req.params.id}`);
+});
 
 module.exports = router;

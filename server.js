@@ -3,6 +3,7 @@ const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
 const expressLayouts = require('express-ejs-layouts');
+const methodOverride = require('method-override');
 
 const indexRouter = require('./routes/index');
 const authorsRouter = require('./routes/authors');
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ limit: "50mb",
     extended: true, parameterLimit: 50000 }))
 app.use(expressLayouts);
 app.use(express.static('public'));
+app.use(methodOverride('_method'));
 
 app.use('/', indexRouter);
 app.use('/authors', authorsRouter);

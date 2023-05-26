@@ -12,7 +12,16 @@
 <div class="authors">
     <ul>
         <% authors.forEach(author => { %>
-            <li><div><%= author.name %> </div></li>
+            <li>
+                <div>
+                    <%= author.name %>
+                    <button><a href="/authors/<%= author.ID %>">View</a></button>
+                    <button><a href="/authors/<%= author.ID %>/edit">Edit</a></button>
+                    <form action="/authors/<%= author.ID %>?_method=DELETE" method="POST">
+                        <button type="submit">Delete</button>
+                    </form>
+                </div>
+            </li>
         <% }) %>
     </ul>
 

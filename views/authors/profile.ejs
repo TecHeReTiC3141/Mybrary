@@ -1,0 +1,11 @@
+<h2><%= author.name %> Info</h2>
+
+<h3>Author's books</h3>
+
+<div class="books">
+    <ul>
+        <% books.forEach(book => { %>
+            <%- include('../partials/renderBook', { book }) %>
+        <% }) %>
+    </ul>
+</div>

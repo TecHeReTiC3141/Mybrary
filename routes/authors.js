@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Author = require('../models/authors');
+const Book = require('../models/books');
+
 const {Sequelize, Op} = require('sequelize');
 
 // Get all authors
@@ -72,7 +74,9 @@ router.route('/:id')
             if (author === null) {
                 res.redirect('/authors');
             } else {
-                res.send(`This is author ID ${author.ID}, name ${author.name}`);
+
+                res.render('authors/profile', { author,
+                    books: await getAuthorBooks(author) });
             }
         } catch (err) {
             res.redirect('/authors');
@@ -116,7 +120,16 @@ router.route('/:id')
                 }
             });
             if (author !== null) {
-                await author.destroy();
+                const books = await getAuthorBooks(author);
+                if (books.length) {
+                    res.render('authors/index', {
+                        authors: await Author.findAll(),
+                        pattern: req.query.pattern,
+                        errorMessage: 'Can not delete author with books',
+                    });
+                } else {
+                    await author.destroy();
+                }
             }
             res.redirect('/authors/');
         } catch (err) {
@@ -132,5 +145,19 @@ router.get('/:id/edit', async (req, res) => {
     });
     res.render('authors/edit', {author});
 });
+
+async function getAuthorBooks(author) {
+    try {
+        const books = await Book.findAll({
+            attributes: ['title', 'coverImagePath'],
+            where: {
+                authorID: author.ID,
+            }
+        });
+        return books;
+    } catch (err) {
+        return [];
+    }
+}
 
 module.exports = router;

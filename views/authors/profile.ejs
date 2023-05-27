@@ -1,0 +1,17 @@
+<h2><%= author.name %> Info</h2>
+
+<button><a href="/authors/<%= author.ID %>/edit">Edit</a></button>
+<%- include('../partials/deleteForm', { url: `/authors/${author.ID}` }) %>
+
+<h3>Books by author</h3>
+<% if (books.length) { %>
+    <div class="books">
+        <ul>
+            <% books.forEach(book => { %>
+                <%- include('../partials/renderBook', { book }) %>
+            <% }) %>
+        </ul>
+    </div>
+<% } else { %>
+    <p>Still no books </p>
+<% } %>

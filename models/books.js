@@ -57,7 +57,8 @@ const Book = connection.define('book', {
 
 Author.hasMany(Book, {
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
+    onUpdate: 'CASCADE',
+    hooks: true,
 });
 Book.belongsTo(Author);
 

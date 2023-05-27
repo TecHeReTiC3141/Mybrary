@@ -44,7 +44,6 @@ router.get('/new', (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-
     try {
         let newAuthor = await Author.create({
             name: req.body.name,

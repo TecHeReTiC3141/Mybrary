@@ -81,12 +81,13 @@ router.post('/', async (req, res) => {
     try {
         book = await Book.build({
             title: req.body.title,
-            author: req.body.author,
+            authorID: req.body.author,
             publishDate: new Date(req.body.publishDate),
             pageCount: req.body.pageCount,
             description: req.body.description,
         });
-        await saveCover(book, req.body.cover);
+
+        const err = await saveCover(book, req.body.cover);
         res.redirect('/books');
     } catch (err) {
         await createNewBookPage({
@@ -107,7 +108,6 @@ router.post('/', async (req, res) => {
 async function saveCover(book, coverEncoded) {
     if (!coverEncoded) return;
     const cover = JSON.parse(coverEncoded);
-    console.log(cover);
     if (cover !== null && imageMimeTypes.includes(cover.type)) {
         book.coverImage = new Buffer.from(cover.data, 'base64');
         book.coverImageType = cover.type;

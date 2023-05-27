@@ -3,7 +3,6 @@ dotenv.config();
 
 const connection = require('../dbService');
 const { DataTypes } = require('sequelize');
-console.log(process.env.DATABASE, process.env.USER, process.env.PASSWORD);
 
 const Author = connection.define('author', {
     ID: {

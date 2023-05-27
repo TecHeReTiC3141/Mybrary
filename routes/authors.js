@@ -49,10 +49,8 @@ router.post('/', async (req, res) => {
             age: +req.body.age
         });
         console.log(newAuthor.toJSON());
-        res.redirect('/authors'); // then to author profile page
-        // res.redirect(`/authors/${newAuthor.id}`); // then to author profile page
+        res.redirect(`/authors/${newAuthor.ID}`);
     } catch (err) {
-        console.log(`Error while creating new author: ${err.message}`);
         res.render('authors/new', {
             errorMessage: `Error while creating new author: ${err.message}`,
             author: {
@@ -79,14 +77,60 @@ router.route('/:id')
         } catch (err) {
             res.redirect('/authors');
         }
-    }).put( async (req, res) => {
-        res.send(`Edit author ID ${req.params.id}`);
-    }).delete( async (req, res) => {
-        res.send(`Delete author ID ${req.params.id}`);
-});
+    })
+    .put(async (req, res) => {
+        try {
+            const author = await Author.findOne({
+                where: {
+                    ID: req.params.id,
+                }
+            });
+            if (author === null) {
+                res.redirect('/authors');
+            } else {
+                await author.update(req.body);
+                await author.save();
+                res.redirect(`/authors/${req.params.id}`);
+            }
+
+        } catch (err) {
+            res.locals.errorMessage = 'Error while creating author';
+
+            res.render(`authors/${req.params.id}/edit`, {
+                errorMessage: `Error while creating new author: ${err.message}`,
+                author: {
+                    name: req.body.name,
+                    age: +req.body.age
+                }
+            });
+            res.redirect('/authors');
+        }
+
+    })
+    .delete(async (req, res) => {
+        let author;
+        try {
+            author = await Author.findOne({
+                where: {
+                    ID: req.params.id,
+                }
+            });
+            if (author !== null) {
+                await author.destroy();
+            }
+            res.redirect('/authors/');
+        } catch (err) {
+            res.redirect('/authors');
+        }
+    });
 
 router.get('/:id/edit', async (req, res) => {
-    res.send(`Edit author ID ${req.params.id}`);
+    const author = await Author.findOne({
+        where: {
+            ID: req.params.id,
+        }
+    });
+    res.render('authors/edit', {author});
 });
 
 module.exports = router;

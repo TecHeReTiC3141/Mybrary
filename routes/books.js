@@ -128,7 +128,6 @@ router.get('/:id/edit', async (req, res) => {
 
 router.route('/:id')
     .get(async (req, res) => {
-
         try {
             const book = await Book.findOne({
                 where: {
@@ -165,6 +164,7 @@ router.route('/:id')
             } else {
                 await book.update(req.body);
                 await book.save();
+                await saveCover(book, req.body.cover);
                 res.redirect(`/books/${req.params.id}`);
             }
 
@@ -172,26 +172,30 @@ router.route('/:id')
             const book = req.body;
             book.publishDate = new Date(book.publishDate);
 
-            res.render(`books/${req.params.id}/edit`, {
-                errorMessage: `Error while editing book: ${err.message}`,
-                book,
-            });
-            res.redirect('/books');
+            res.redirect(`/books/${req.params.id}/edit`);
+
         }
     })
     .delete(async (req, res) => {
+        let book;
         try {
-            const book = await Book.findOne({
+            book = await Book.findOne({
                 where: {
                     ID: req.params.id,
                 }
             });
-            if (book !== null) {
-                await book.destroy();
-            }
+            await book.destroy();
+
             res.redirect('/books/');
         } catch (err) {
-            res.redirect('/authors');
+            if (book !== null) {
+                res.render('books/show', {
+                    book,
+                    errorMessage: `Could not remove book: ${err.message}`,
+                })
+            } else {
+                res.redirect('/books');
+            }
         }
     })
 

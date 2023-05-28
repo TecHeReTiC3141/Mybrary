@@ -68,10 +68,11 @@ router.get('/', async (req, res) => {
 
 // New books form
 router.get('/new', async (req, res) => {
-    await createNewBookPage(
+    await CreateBookFormPage(
         {
             res,
-            book: {}
+            book: {},
+            form: 'new',
         });
 
 });
@@ -87,23 +88,116 @@ router.post('/', async (req, res) => {
             description: req.body.description,
         });
 
-        const err = await saveCover(book, req.body.cover);
+        await saveCover(book, req.body.cover);
         res.redirect('/books');
     } catch (err) {
-        await createNewBookPage({
-            res,
-            book: {
-                title: req.body.title,
-                author: req.body.author,
-                publishDate: new Date(req.body.publishDate),
-                pageCount: req.body.pageCount,
-                description: req.body.description,
-            },
-            error: err,
-        })
+        await CreateBookFormPage(
+            {
+                res,
+                book: {
+                    title: req.body.title,
+                    author: req.body.author,
+                    publishDate: new Date(req.body.publishDate),
+                    pageCount: req.body.pageCount,
+                    description: req.body.description,
+                },
+                form: 'new',
+            });
     }
 
 });
+
+router.get('/:id/edit', async (req, res) => {
+    try {
+        const book = await Book.findOne({
+            where: {
+                ID: req.params.id,
+            },
+        });
+        await CreateBookFormPage(
+            {
+                res,
+                book: book,
+                form: 'edit',
+            });
+    } catch (err) {
+        res.redirect('/books')
+    }
+
+})
+
+router.route('/:id')
+    .get(async (req, res) => {
+        try {
+            const book = await Book.findOne({
+                where: {
+                    ID: req.params.id,
+                },
+                include: Author
+            });
+            if (book === null) {
+                const books = await Book.findAll();
+                res.render('books/index',
+                    {
+                        searchOptions: {},
+                        books,
+                        entriesCol: books.length,
+                        errorMessage: 'No such book',
+                    });
+            } else {
+                res.render('books/show', {book});
+            }
+
+        } catch (err) {
+            res.redirect('/books');
+        }
+    })
+    .put(async (req, res) => {
+        try {
+            const book = await Book.findOne({
+                where: {
+                    ID: req.params.id,
+                }
+            });
+            if (book === null) {
+                res.redirect('/books');
+            } else {
+                await book.update(req.body);
+                await book.save();
+                await saveCover(book, req.body.cover);
+                res.redirect(`/books/${req.params.id}`);
+            }
+
+        } catch (err) {
+            const book = req.body;
+            book.publishDate = new Date(book.publishDate);
+
+            res.redirect(`/books/${req.params.id}/edit`);
+
+        }
+    })
+    .delete(async (req, res) => {
+        let book;
+        try {
+            book = await Book.findOne({
+                where: {
+                    ID: req.params.id,
+                }
+            });
+            await book.destroy();
+
+            res.redirect('/books/');
+        } catch (err) {
+            if (book !== null) {
+                res.render('books/show', {
+                    book,
+                    errorMessage: `Could not remove book: ${err.message}`,
+                })
+            } else {
+                res.redirect('/books');
+            }
+        }
+    })
 
 async function saveCover(book, coverEncoded) {
     if (!coverEncoded) return;
@@ -116,7 +210,7 @@ async function saveCover(book, coverEncoded) {
 
 }
 
-async function createNewBookPage({res, book, error = null}) {
+async function CreateBookFormPage({res, book, form, error = null}) {
     try {
         const params = {
             authors: await Author.findAll(),
@@ -124,9 +218,8 @@ async function createNewBookPage({res, book, error = null}) {
         }
         if (error) params.errorMessage =
             `Error while creating new book: ${error.message}`;
-        res.render('books/new', params);
+        res.render(`books/${form}`, params);
     } catch (err) {
-        console.log(err);
         res.redirect('/books');
     }
 }

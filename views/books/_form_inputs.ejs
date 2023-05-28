@@ -6,14 +6,14 @@
 
 <div>
     <label>Author:
-        <select name="author">
+        <select <%= (book?.authorID ? 'disabled ' : '') %>name="author">
             <% authors.forEach(author => { %>
                 <% if (book?.authorID === author.ID) { %>
-                <option selected label="<%= author.name %>" value="<%= author.ID %>">
-                    <% } else { %>
-            <option label="<%= author.name %>" value="<%= author.ID %>">
+                    <option selected label="<%= author.name %>" value="<%= author.ID %>">
+                <% } else { %>
+                    <option label="<%= author.name %>" value="<%= author.ID %>">
                 <% } %>
-                <% }) %>
+            <% }) %>
         </select>
     </label>
 </div>

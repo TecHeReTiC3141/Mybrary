@@ -117,7 +117,7 @@ router.get('/:id/edit', async (req, res) => {
         await CreateBookFormPage(
             {
                 res,
-                book: {},
+                book: book,
                 form: 'edit',
             });
     } catch (err) {
@@ -154,10 +154,45 @@ router.route('/:id')
         }
     })
     .put(async (req, res) => {
+        try {
+            const book = await Book.findOne({
+                where: {
+                    ID: req.params.id,
+                }
+            });
+            if (book === null) {
+                res.redirect('/books');
+            } else {
+                await book.update(req.body);
+                await book.save();
+                res.redirect(`/books/${req.params.id}`);
+            }
 
+        } catch (err) {
+            const book = req.body;
+            book.publishDate = new Date(book.publishDate);
+
+            res.render(`books/${req.params.id}/edit`, {
+                errorMessage: `Error while editing book: ${err.message}`,
+                book,
+            });
+            res.redirect('/books');
+        }
     })
     .delete(async (req, res) => {
-
+        try {
+            const book = await Book.findOne({
+                where: {
+                    ID: req.params.id,
+                }
+            });
+            if (book !== null) {
+                await book.destroy();
+            }
+            res.redirect('/books/');
+        } catch (err) {
+            res.redirect('/authors');
+        }
     })
 
 async function saveCover(book, coverEncoded) {

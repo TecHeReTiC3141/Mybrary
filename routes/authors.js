@@ -97,10 +97,9 @@ router.route('/:id')
             }
 
         } catch (err) {
-            res.locals.errorMessage = 'Error while creating author';
 
             res.render(`authors/${req.params.id}/edit`, {
-                errorMessage: `Error while creating new author: ${err.message}`,
+                errorMessage: `Error while editing new author: ${err.message}`,
                 author: {
                     name: req.body.name,
                     age: +req.body.age

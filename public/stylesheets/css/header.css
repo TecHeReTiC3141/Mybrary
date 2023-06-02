@@ -1,0 +1,52 @@
+@import '../shared/variables.css';
+
+:root {
+    --nav-title-font-size: 3rem;
+    --nav-title-font-weight: bold;
+    --nav-link-font-weight: 300;
+
+}
+
+header {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+}
+
+.caption.header-link {
+    font-size: var(--nav-title-font-size);
+    font-weight: var(--nav-title-font-weight);
+}
+
+header a {
+    text-decoration: none;
+    color: var(--color-text-light);
+}
+
+.navbar {
+    max-width: available;
+}
+
+.nav {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: space-around;
+    list-style-type: none;
+}
+
+.nav li {
+    padding: 1rem;
+}
+.header-link {
+    font-weight: var(--nav-link-font-weight);
+}
+
+.header-link:hover {
+    color: var(--color-link-hover);
+
+}

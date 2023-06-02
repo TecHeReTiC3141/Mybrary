@@ -1,17 +1,13 @@
-<h2><%= author.name %> Info</h2>
+<h2 class="page-header"><%= author.name %> Info</h2>
 
-<button><a href="/authors/<%= author.ID %>/edit">Edit</a></button>
-<%- include('../partials/deleteForm', { url: `/authors/${author.ID}` }) %>
+<div class="btn-row">
+    <a class="btn btn-primary" href="/authors/<%= author.ID %>/edit">Edit</a>
+    <%- include('../partials/deleteForm', { url: `/authors/${author.ID}` }) %>
+</div>
 
-<h3>Books by author</h3>
+<h3 class="page-header">Books by author</h3>
 <% if (books.length) { %>
-    <div class="books">
-        <ul>
-            <% books.forEach(book => { %>
-                <%- include('../partials/renderBook', { book }) %>
-            <% }) %>
-        </ul>
-    </div>
+    <%- include('../partials/renderBookGrid', { books }) %>
 <% } else { %>
     <p>Still no books </p>
 <% } %>

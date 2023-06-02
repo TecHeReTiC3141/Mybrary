@@ -1,0 +1,37 @@
+@import '../shared/variables.css';
+
+*, *::before, *::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to right,
+    var(--color-background-dark),  var(--color-background-light));
+}
+
+.container {
+    max-width: 75em;
+    margin: auto;
+    margin-bottom: 2rem;
+}
+
+.content {
+    margin: 0 2em;
+}
+
+.page-header {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.error-message {
+    color: hsl(var(--color-danger-hue), 100%, 50%);
+}

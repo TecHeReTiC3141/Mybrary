@@ -1,0 +1,13 @@
+@import 'shared/fonts.css';
+@import 'css/general.css';
+@import 'css/header.css';
+@import 'css/buttons.css';
+@import 'css/forms.css';
+@import 'css/authors.css';
+@import 'css/books.css';
+
+:root {
+    font-family: 'Gotham Rounded', sans-serif;
+    font-size: 1.25em;
+    color: var(--color-text-light);
+}

@@ -1,21 +1,25 @@
 const express = require('express');
 const router = express.Router();
 
-const { Book } = require('../models/books');
+const Book  = require('../models/books');
 
 router.get('/', async (req, res) => {
     let books;
+
     try {
+
         books = await Book.findAll({
             order: [
                 ['createdAt', 'DESC'],
             ],
             limit: 5,
         });
-        res.render('index', {books});
+
     } catch (err) {
+        console.log(err.message);
         books = [];
     }
+    console.log('on index', books);
     res.render('index', {books});
 });
 

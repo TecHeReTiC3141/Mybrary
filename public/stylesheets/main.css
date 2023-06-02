@@ -1,6 +1,7 @@
 @import 'shared/fonts.css';
 @import 'css/general.css';
 @import 'css/header.css';
+@import 'css/buttons.css';
 
 :root {
     font-family: 'Gotham Rounded', sans-serif;

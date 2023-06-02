@@ -7,7 +7,7 @@
     <button type="submit">Search</button>
 </form>
 
-<h2>All authors</h2>
+<h2 class="page-header">All authors</h2>
 
 <div class="authors">
     <ul>
@@ -15,9 +15,11 @@
             <li>
                 <div>
                     <%= author.name %>
-                    <button><a href="/authors/<%= author.ID %>">View</a></button>
-                    <button><a href="/authors/<%= author.ID %>/edit">Edit</a></button>
-                    <%- include('../partials/deleteForm', { url: `/authors/${author.ID}` }) %>
+                    <div class="btn-row">
+                        <a class="btn btn-primary" href="/authors/<%= author.ID %>">View</a>
+                        <a class="btn btn-primary" href="/authors/<%= author.ID %>/edit">Edit</a>
+                        <%- include('../partials/deleteForm', { url: `/authors/${author.ID}` }) %>
+                    </div>
                 </div>
             </li>
         <% }) %>

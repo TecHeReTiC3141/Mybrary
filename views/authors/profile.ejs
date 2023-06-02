@@ -1,6 +1,6 @@
-<h2><%= author.name %> Info</h2>
+<h2 class="page-header"><%= author.name %> Info</h2>
 
-<button><a href="/authors/<%= author.ID %>/edit">Edit</a></button>
+<button><a class="btn btn-primary" href="/authors/<%= author.ID %>/edit">Edit</a></button>
 <%- include('../partials/deleteForm', { url: `/authors/${author.ID}` }) %>
 
 <h3>Books by author</h3>

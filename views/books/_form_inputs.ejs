@@ -1,49 +1,55 @@
-<div>
-    <label>Title:
+<div class="form-row">
+    <div class="form-item">
+        <label>Title: </label>
         <input type="text" name="title" id="title" value="<%= book?.title %>">
-    </label>
-</div>
+    </div>
 
-<div>
-    <label>Author:
+
+    <div class="form-item">
+        <label>Author:</label>
         <select <%= (book?.authorID ? 'disabled ' : '') %>name="author">
             <% authors.forEach(author => { %>
                 <% if (book?.authorID === author.ID) { %>
-                    <option selected label="<%= author.name %>" value="<%= author.ID %>">
-                <% } else { %>
-                    <option label="<%= author.name %>" value="<%= author.ID %>">
+                <option selected label="<%= author.name %>" value="<%= author.ID %>">
+                    <% } else { %>
+            <option label="<%= author.name %>" value="<%= author.ID %>">
                 <% } %>
-            <% }) %>
+                <% }) %>
         </select>
-    </label>
+    </div>
 </div>
 
-<div>
-    <label>Publish Date:
+<div class="form-row">
+    <div class="form-item">
+        <label>Publish Date:</label>
         <input type="date" name="publishDate" id="publishDate"
                value="<%= book?.publishDate === null || book?.publishDate === undefined ? ''
                        : book.publishDate.toISOString().split('T')[0] %>">
-    </label>
-</div>
 
-<div>
-    <label>Page count:
+    </div>
+
+    <div class="form-item">
+        <label>Page count: </label>
         <input type="number" name="pageCount" id="pageCount"
                value="<%= book?.pageCount %>" min="1">
-    </label>
+
+    </div>
 </div>
 
-<div>
-    <label>Cover:
+<div class="form-row">
+    <div class="form-item no-grow">
+        <label>Cover:</label>
         <input type="file" name="cover" id="cover" class="filepond">
-    </label>
-</div>
 
-<div>
-    <label>Description:
+    </div>
+
+    <div class="form-item">
+        <label>Description:</label>
         <textarea name="description" id="description" cols="30" rows="10">
             <%= book?.description %>
         </textarea>
-    </label>
+
+    </div>
 </div>
+
 

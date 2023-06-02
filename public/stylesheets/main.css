@@ -2,6 +2,7 @@
 @import 'css/general.css';
 @import 'css/header.css';
 @import 'css/buttons.css';
+@import 'css/forms.css';
 
 :root {
     font-family: 'Gotham Rounded', sans-serif;

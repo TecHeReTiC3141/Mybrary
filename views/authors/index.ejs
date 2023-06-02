@@ -1,10 +1,12 @@
-<h3>Search authors</h3>
+<h3 class="page-header">Search authors</h3>
 
 <form action="/authors" method="GET">
-    <label for="">
+    <div class="form-item">
         <input type="text" name="pattern" id="pattern" value="<%= pattern %>">
-    </label>
-    <button type="submit">Search</button>
+    </div>
+    <div class="btn-row form-row form-row-end">
+        <button class="btn btn-primary" type="submit">Search</button>
+    </div>
 </form>
 
 <h2 class="page-header">All authors</h2>

@@ -31,11 +31,7 @@
 <h2>All books. Totally <%= entriesCol %></h2>
 
 <div class="books">
-    <ul>
-        <% books.forEach(book => { %>
-            <%- include('../partials/renderBook', { book }) %>
-        <% }) %>
-    </ul>
+    <%- include('../partials/renderBookGrid', { books, large: true }) %>
 </div>
 
 

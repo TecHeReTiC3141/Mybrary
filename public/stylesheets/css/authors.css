@@ -1,0 +1,13 @@
+.authors {
+    list-style-type : none;
+}
+
+.authors li {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1em;
+    align-items: center;
+}
+.author-name {
+    font-size: 1.5rem;
+}

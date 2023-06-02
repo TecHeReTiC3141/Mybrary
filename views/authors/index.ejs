@@ -11,21 +11,17 @@
 
 <h2 class="page-header">All authors</h2>
 
-<div class="authors">
-    <ul>
-        <% authors.forEach(author => { %>
-            <li>
-                <div>
-                    <%= author.name %>
-                    <div class="btn-row">
-                        <a class="btn btn-primary" href="/authors/<%= author.ID %>">View</a>
-                        <a class="btn btn-primary" href="/authors/<%= author.ID %>/edit">Edit</a>
-                        <%- include('../partials/deleteForm', { url: `/authors/${author.ID}` }) %>
-                    </div>
-                </div>
-            </li>
-        <% }) %>
-    </ul>
+<ul class="authors">
+    <% authors.forEach(author => { %>
+        <li>
+            <p class="author-name"><%= author.name %></p>
+            <div class="btn-row">
+                <a class="btn btn-primary" href="/authors/<%= author.ID %>">View</a>
+                <a class="btn btn-primary" href="/authors/<%= author.ID %>/edit">Edit</a>
+                <%- include('../partials/deleteForm', { url: `/authors/${author.ID}` }) %>
+            </div>
+        </li>
+    <% }) %>
 
-</div>
+</ul>
 

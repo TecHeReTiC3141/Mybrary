@@ -19,7 +19,6 @@ router.get('/', async (req, res) => {
         console.log(err.message);
         books = [];
     }
-    console.log('on index', books);
     res.render('index', {books});
 });
 

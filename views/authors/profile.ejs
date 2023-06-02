@@ -7,13 +7,7 @@
 
 <h3 class="page-header">Books by author</h3>
 <% if (books.length) { %>
-    <div class="books">
-        <ul>
-            <% books.forEach(book => { %>
-                <%- include('../partials/renderBook', { book }) %>
-            <% }) %>
-        </ul>
-    </div>
+    <%- include('../partials/renderBookGrid', { books }) %>
 <% } else { %>
     <p>Still no books </p>
 <% } %>

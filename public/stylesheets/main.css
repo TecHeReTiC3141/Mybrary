@@ -3,6 +3,8 @@
 @import 'css/header.css';
 @import 'css/buttons.css';
 @import 'css/forms.css';
+@import 'css/authors.css';
+@import 'css/books.css';
 
 :root {
     font-family: 'Gotham Rounded', sans-serif;

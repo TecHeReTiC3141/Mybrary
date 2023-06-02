@@ -31,3 +31,7 @@ body, html {
     font-size: 2rem;
     font-weight: bold;
 }
+
+.error-message {
+    color: hsl(var(--color-danger-hue), 100%, 50%);
+}

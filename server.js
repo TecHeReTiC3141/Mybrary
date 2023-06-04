@@ -15,7 +15,7 @@ const booksRouter = require('./routes/books');
 
 const sequelize = require('./dbService');
 
-sequelize.sync()
+sequelize.sync({force: true})
     .then(() => console.log("All models were synchronized successfully."));
 
 app.set('view engine', 'ejs');

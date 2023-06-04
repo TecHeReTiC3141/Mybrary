@@ -5,6 +5,10 @@ dotenv.config();
 const expressLayouts = require('express-ejs-layouts');
 const methodOverride = require('method-override');
 
+const session = require('express-session');
+const flash = require('express-flash');
+const passport = require('passport');
+
 const indexRouter = require('./routes/index');
 const authorsRouter = require('./routes/authors');
 const booksRouter = require('./routes/books');
@@ -24,6 +28,14 @@ app.use(express.urlencoded({ limit: "50mb",
 app.use(expressLayouts);
 app.use(express.static('public'));
 app.use(methodOverride('_method'));
+app.use(flash());
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/authors', authorsRouter);

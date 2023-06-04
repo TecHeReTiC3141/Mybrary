@@ -4,6 +4,13 @@ const Author = require('../models/authors');
 const Book = require('../models/books');
 const bcrypt = require('bcrypt');
 
+const passport = require('passport');
+const initialize = require('../initiatePassport');
+
+(async () => {
+    await initialize(passport);
+})();
+
 const {Sequelize, Op} = require('sequelize');
 
 // Get all authors
@@ -40,7 +47,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/login', (req, res) => {
-    res.render('authors/login');
+    res.render('authors/login', { author: {}});
 });
 
 router.post('/login', (req, res) => {
@@ -48,36 +55,55 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/register', (req, res) => {
-    res.render('authors/register', { author: {}});
+    res.render('authors/register', { author: {} });
 })
 
-router.post('/register', (req, res) => {
-    res.render('authors/register');
-})
-
-// New authors form
-router.get('/new', (req, res) => {
-    res.render('authors/new', {author: {}});
-});
-
-router.post('/', async (req, res) => {
+router.post('/register', async (req, res) => {
     try {
-        let newAuthor = await Author.create({
+        const author = await Author.create({
             name: req.body.name,
-            age: +req.body.age
+            email: req.body.email,
+            password: await bcrypt.hash(req.body.password, 10),
+            biography: req.body.biography,
+            age: req.body.age,
         });
-        console.log(newAuthor.toJSON());
-        res.redirect(`/authors/${newAuthor.ID}`);
+        res.redirect('./login');
     } catch (err) {
-        res.render('authors/new', {
-            errorMessage: `Error while creating new author: ${err.message}`,
+        res.render('authors/register', {
             author: {
                 name: req.body.name,
-                age: +req.body.age
+                email: req.body.email,
+                password: req.body.password,
+                biography: req.body.biography,
+                age: req.body.age,
             }
-        });
+        })
     }
-});
+})
+
+// // New authors form
+// router.get('/new', (req, res) => {
+//     res.render('authors/new', {author: {}});
+// });
+//
+// router.post('/', async (req, res) => {
+//     try {
+//         let newAuthor = await Author.create({
+//             name: req.body.name,
+//             age: +req.body.age
+//         });
+//         console.log(newAuthor.toJSON());
+//         res.redirect(`/authors/${newAuthor.ID}`);
+//     } catch (err) {
+//         res.render('authors/new', {
+//             errorMessage: `Error while creating new author: ${err.message}`,
+//             author: {
+//                 name: req.body.name,
+//                 age: +req.body.age
+//             }
+//         });
+//     }
+// });
 
 router.route('/:id')
     .get(async (req, res) => {

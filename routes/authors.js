@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Author = require('../models/authors');
 const Book = require('../models/books');
+const bcrypt = require('bcrypt');
 
 const {Sequelize, Op} = require('sequelize');
 
@@ -37,6 +38,22 @@ router.get('/', async (req, res) => {
         res.redirect('/');
     }
 });
+
+router.get('/login', (req, res) => {
+    res.render('authors/login');
+});
+
+router.post('/login', (req, res) => {
+    res.render('authors/login');
+});
+
+router.get('/register', (req, res) => {
+    res.render('authors/register', { author: {}});
+})
+
+router.post('/register', (req, res) => {
+    res.render('authors/register');
+})
 
 // New authors form
 router.get('/new', (req, res) => {

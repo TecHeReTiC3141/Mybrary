@@ -5,7 +5,12 @@
             <li ><a class="header-link" href="/books">Books</a></li>
             <li><a class="header-link" href="/books/new">Add Book</a></li>
             <li><a class="header-link" href="/authors">Authors</a></li>
-            <li><a class="header-link" href="/authors/login">Login/Register</a></li>
+            <% if (!isAuthenticated) { %>
+                <li><a class="header-link" href="/authors/login">Login/Register</a></li>
+            <% } else { %>
+                <li><a class="header-link" href="/authors/<%= user.ID %>">Profile</a></li>
+
+            <% } %>
         </ul>
     </div>
 

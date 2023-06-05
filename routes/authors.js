@@ -5,20 +5,20 @@ const Book = require('../models/books');
 const bcrypt = require('bcrypt');
 
 const passport = require('passport');
-const initialize = require('../initiatePassport');
+const initialize = require('../utils/initiatePassport');
 
 (async () => {
     await initialize(passport,
-        async email => await Author.findOne({
+        async email => (await Author.findOne({
             where: {
-                email: email,
+                email,
             }
-        }),
-        async id => await Author.findOne({
+        })).toJSON(),
+        async id => (await Author.findOne({
             where: {
-                id: id,
+                id,
             }
-        }),
+        })).toJSON(),
     );
 })();
 
@@ -59,9 +59,11 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/login',  checkNotAuthentication, (req, res) => {
-    res.render('authors/login', {author: {},
-        user: null, isAuthenticated: false });
+router.get('/login', checkNotAuthentication, (req, res) => {
+    res.render('authors/login', {
+        author: {},
+        user: null, isAuthenticated: false
+    });
 });
 
 router.post('/login', passport.authenticate('local', {

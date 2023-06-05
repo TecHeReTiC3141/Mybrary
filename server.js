@@ -6,6 +6,7 @@ const expressLayouts = require('express-ejs-layouts');
 const methodOverride = require('method-override');
 
 const session = require('express-session');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const flash = require('express-flash');
 const passport = require('passport');
 
@@ -13,7 +14,14 @@ const indexRouter = require('./routes/index');
 const authorsRouter = require('./routes/authors');
 const booksRouter = require('./routes/books');
 
-const sequelize = require('./dbService');
+const sequelize = require('./utils/getSequelizeInstance');
+
+require('./models/session');
+
+sequelize.authenticate()
+    .then(() => console.log('Connected successfully'))
+    .catch(err => console.log(`Error while connecting: ${err.message}`));
+
 
 sequelize.sync()
     .then(() => console.log("All models were synchronized successfully."));
@@ -33,7 +41,15 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+    },
+    store: new SequelizeStore({
+        db: sequelize,
+        table: 'Session',
+    }),
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -43,3 +59,4 @@ app.use('/books', booksRouter);
 
 app.listen(process.env.PORT || 3000,
     () => console.log('On http://localhost:3000'));
+

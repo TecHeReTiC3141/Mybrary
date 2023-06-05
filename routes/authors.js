@@ -8,7 +8,18 @@ const passport = require('passport');
 const initialize = require('../initiatePassport');
 
 (async () => {
-    await initialize(passport);
+    await initialize(passport,
+        async email => await Author.findOne({
+            where: {
+                email: email,
+            }
+        }),
+        async id => await Author.findOne({
+            where: {
+                id: id,
+            }
+        }),
+    );
 })();
 
 const {Sequelize, Op} = require('sequelize');
@@ -38,7 +49,9 @@ router.get('/', async (req, res) => {
 
         res.render('authors/index', {
             authors,
-            pattern: req.query.pattern
+            pattern: req.query.pattern,
+            user: req.user,
+            isAuthenticated: req.isAuthenticated(),
         });
     } catch (err) {
         console.log(err.message);
@@ -46,16 +59,19 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/login', (req, res) => {
-    res.render('authors/login', { author: {}});
+router.get('/login',  checkNotAuthentication, (req, res) => {
+    res.render('authors/login', {author: {},
+        user: null, isAuthenticated: false });
 });
 
-router.post('/login', (req, res) => {
-    res.render('authors/login');
-});
+router.post('/login', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: './login',
+    failureFlash: true,
+}));
 
-router.get('/register', (req, res) => {
-    res.render('authors/register', { author: {} });
+router.get('/register', checkNotAuthentication, (req, res) => {
+    res.render('authors/register', {author: {}});
 })
 
 router.post('/register', async (req, res) => {
@@ -81,30 +97,6 @@ router.post('/register', async (req, res) => {
     }
 })
 
-// // New authors form
-// router.get('/new', (req, res) => {
-//     res.render('authors/new', {author: {}});
-// });
-//
-// router.post('/', async (req, res) => {
-//     try {
-//         let newAuthor = await Author.create({
-//             name: req.body.name,
-//             age: +req.body.age
-//         });
-//         console.log(newAuthor.toJSON());
-//         res.redirect(`/authors/${newAuthor.ID}`);
-//     } catch (err) {
-//         res.render('authors/new', {
-//             errorMessage: `Error while creating new author: ${err.message}`,
-//             author: {
-//                 name: req.body.name,
-//                 age: +req.body.age
-//             }
-//         });
-//     }
-// });
-
 router.route('/:id')
     .get(async (req, res) => {
         try {
@@ -117,8 +109,10 @@ router.route('/:id')
                 res.redirect('/authors');
             } else {
 
-                res.render('authors/profile', { author,
-                    books: await getAuthorBooks(author) });
+                res.render('authors/profile', {
+                    author,
+                    books: await getAuthorBooks(author)
+                });
             }
         } catch (err) {
             res.redirect('/authors');
@@ -199,6 +193,20 @@ async function getAuthorBooks(author) {
     } catch (err) {
         return [];
     }
+}
+
+function checkAuthentication(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('authors/login');
+}
+
+function checkNotAuthentication(req, res, next) {
+    if (!req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/');
 }
 
 module.exports = router;

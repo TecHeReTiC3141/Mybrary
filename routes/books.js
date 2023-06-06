@@ -5,7 +5,10 @@ const Author = require('../models/authors');
 const Book = require('../models/books');
 const {Sequelize, Op} = require('sequelize');
 
-const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif',]
+const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif',];
+
+const { checkAuthentication, checkNotAuthentication } = require('../utils/middleware');
+
 
 // Get all books
 router.get('/', async (req, res) => {
@@ -67,7 +70,7 @@ router.get('/', async (req, res) => {
 });
 
 // New books form
-router.get('/new', async (req, res) => {
+router.get('/new', checkAuthentication, async (req, res) => {
     await CreateBookFormPage(
         {
             res,
@@ -137,13 +140,9 @@ router.route('/:id')
             });
             if (book === null) {
                 const books = await Book.findAll();
-                res.render('books/index',
-                    {
-                        searchOptions: {},
-                        books,
-                        entriesCol: books.length,
-                        errorMessage: 'No such book',
-                    });
+                req.flash('error',  'No such book');
+                res.redirect('/books');
+
             } else {
                 res.render('books/show', {book});
             }
@@ -160,6 +159,7 @@ router.route('/:id')
                 }
             });
             if (book === null) {
+                req.flash('error',  'No such book');
                 res.redirect('/books');
             } else {
                 await book.update(req.body);

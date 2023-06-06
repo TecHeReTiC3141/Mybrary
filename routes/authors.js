@@ -4,6 +4,8 @@ const Author = require('../models/authors');
 const Book = require('../models/books');
 const bcrypt = require('bcrypt');
 
+const { checkAuthentication, checkNotAuthentication } = require('../utils/middleware');
+
 const passport = require('passport');
 const initialize = require('../utils/initiatePassport');
 
@@ -67,6 +69,7 @@ router.post('/login', passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: './login',
     failureFlash: true,
+
 }));
 
 router.get('/register', checkNotAuthentication, (req, res) => {
@@ -82,6 +85,7 @@ router.post('/register', async (req, res) => {
             biography: req.body.biography,
             age: req.body.age,
         });
+        req.flash('success', 'Successfully registered');
         res.redirect('./login');
     } catch (err) {
         res.render('authors/register', {
@@ -102,6 +106,7 @@ router.delete('/logout', (req, res) => {
             console.log(err);
             return res.redirect('/');
         }
+        req.flash('info',  'Successfully logged out' );
         res.redirect('./login');
     })
 })
@@ -206,18 +211,5 @@ async function getAuthorBooks(author) {
     }
 }
 
-function checkAuthentication(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('authors/login');
-}
-
-function checkNotAuthentication(req, res, next) {
-    if (!req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('/');
-}
 
 module.exports = router;

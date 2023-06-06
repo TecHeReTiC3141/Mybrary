@@ -7,8 +7,9 @@ const methodOverride = require('method-override');
 
 const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
-const flash = require('express-flash');
+const flash = require('connect-flash');
 const passport = require('passport');
+const cookieParser = require('cookie-parser');
 
 const indexRouter = require('./routes/index');
 const authorsRouter = require('./routes/authors');
@@ -36,7 +37,9 @@ app.use(express.urlencoded({ limit: "50mb",
 app.use(expressLayouts);
 app.use(express.static('public'));
 app.use(methodOverride('_method'));
-app.use(flash());
+
+app.use(cookieParser('keyboard cat'));
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -49,6 +52,7 @@ app.use(session({
         table: 'Session',
     }),
 }));
+app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -58,7 +62,13 @@ app.use(function(req,res,next){
     res.locals.isAuthenticated = req.isAuthenticated();
 
     next();
-})
+});
+
+app.use(function(req, res, next) {
+    res.locals.messages = req.flash();
+    console.log(res.locals.messages);
+    next();
+});
 
 app.use('/', indexRouter);
 app.use('/authors', authorsRouter);

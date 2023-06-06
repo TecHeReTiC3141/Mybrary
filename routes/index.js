@@ -22,8 +22,7 @@ router.get('/', async (req, res) => {
     console.log(req.user);
     console.log(req.user.ID, req.user.email);
     res.render('index', {
-        books, user: req.user,
-        isAuthenticated: req.isAuthenticated(),
+        books
     });
 });
 

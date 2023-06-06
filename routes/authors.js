@@ -50,8 +50,6 @@ router.get('/', async (req, res) => {
         res.render('authors/index', {
             authors,
             pattern: req.query.pattern,
-            user: req.user,
-            isAuthenticated: req.isAuthenticated(),
         });
     } catch (err) {
         console.log(err.message);
@@ -62,7 +60,6 @@ router.get('/', async (req, res) => {
 router.get('/login', checkNotAuthentication, (req, res) => {
     res.render('authors/login', {
         author: {},
-        user: null, isAuthenticated: false
     });
 });
 
@@ -99,6 +96,17 @@ router.post('/register', async (req, res) => {
     }
 })
 
+router.delete('/logout', (req, res) => {
+    req.logOut(err => {
+        if (err) {
+            console.log(err);
+            return res.redirect('/');
+        }
+        res.redirect('./login');
+    })
+})
+
+
 router.route('/:id')
     .get(async (req, res) => {
         try {
@@ -113,7 +121,7 @@ router.route('/:id')
 
                 res.render('authors/profile', {
                     author,
-                    books: await getAuthorBooks(author)
+                    books: await getAuthorBooks(author),
                 });
             }
         } catch (err) {
@@ -136,12 +144,11 @@ router.route('/:id')
             }
 
         } catch (err) {
-
             res.render(`authors/${req.params.id}/edit`, {
                 errorMessage: `Error while editing new author: ${err.message}`,
                 author: {
                     name: req.body.name,
-                    age: +req.body.age
+                    age: +req.body.age,
                 }
             });
             res.redirect('/authors');
@@ -182,6 +189,8 @@ router.get('/:id/edit', async (req, res) => {
     });
     res.render('authors/edit', {author});
 });
+
+
 
 async function getAuthorBooks(author) {
     try {

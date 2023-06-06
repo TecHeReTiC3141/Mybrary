@@ -8,6 +8,24 @@
     margin-bottom: 1em;
     align-items: center;
 }
+
 .author-name {
     font-size: 1.5rem;
+}
+
+.author-details-label {
+    font-size: 1.2rem;
+    font-weight: 500;
+    align-self: flex-start;
+}
+
+.author-details-grid {
+    width: min(50%, 20em);
+    display: grid;
+    align-content: flex-start;
+    align-items: center;
+    grid-gap: 1rem;
+    grid-template-columns: auto auto;
+    margin-left: 1em;
+    margin-bottom: 2em;
 }

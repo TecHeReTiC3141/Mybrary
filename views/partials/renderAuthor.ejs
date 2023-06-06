@@ -1,0 +1,22 @@
+<div class="author-details-grid">
+    <div class="author-details-label">Email</div>
+    <div ><%= author.email %></div>
+    <div class="author-details-label">Age</div>
+    <div ><%= author.age %></div>
+    <div class="author-details-label">Biography</div>
+    <div ><%= author.biography %></div>
+</div>
+
+<% if (author.ID === user?.ID) { %>
+    <div class="btn-row">
+        <a class="btn btn-primary" href="/authors/<%= author.ID %>/edit">Edit</a>
+        <%- include('../partials/deleteForm', { url: `/authors/${author.ID}` }) %>
+        <form action="/authors/logout?_method=DELETE" method="POST">
+            <button class="btn btn-danger" type="submit">Logout</button>
+        </form>
+    </div>
+<% } else { %>
+
+<% }%>
+
+

@@ -49,6 +49,7 @@
     align-items: center;
     grid-gap: 1rem;
     grid-template-columns: auto auto;
+    margin-left: 1em;
 }
 
 .books-details-btn-grid {

@@ -7,14 +7,9 @@
 
     <div class="form-item">
         <label>Author:</label>
-        <select <%= (book?.authorID ? 'disabled ' : '') %>name="author">
-            <% authors.forEach(author => { %>
-                <% if (book?.authorID === author.ID) { %>
-                <option selected label="<%= author.name %>" value="<%= author.ID %>">
-                    <% } else { %>
-            <option label="<%= author.name %>" value="<%= author.ID %>">
-                <% } %>
-                <% }) %>
+        <select readonly="readonly" name="author">
+            <option selected label="<%= user.name %>" value="<%= user.ID %>">
+
         </select>
     </div>
 </div>

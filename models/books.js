@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
-const connection = require('../dbService');
+const connection = require('../utils/getSequelizeInstance');
 const { DataTypes } = require('sequelize');
 const path = require('path');
 

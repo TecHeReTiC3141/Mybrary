@@ -2,10 +2,31 @@ const express = require('express');
 const router = express.Router();
 const Author = require('../models/authors');
 const Book = require('../models/books');
+const bcrypt = require('bcrypt');
+
+const {checkAuthentication, checkNotAuthentication} = require('../utils/middleware');
+
+const passport = require('passport');
+const initialize = require('../utils/initiatePassport');
+
+(async () => {
+    await initialize(passport,
+        async email => (await Author.findOne({
+            where: {
+                email,
+            }
+        })).toJSON(),
+        async id => (await Author.findOne({
+            where: {
+                id,
+            }
+        })).toJSON()
+        ,
+    );
+})();
 
 const {Sequelize, Op} = require('sequelize');
 
-// Get all authors
 router.get('/', async (req, res) => {
     try {
         let authors;
@@ -30,7 +51,7 @@ router.get('/', async (req, res) => {
 
         res.render('authors/index', {
             authors,
-            pattern: req.query.pattern
+            pattern: req.query.pattern,
         });
     } catch (err) {
         console.log(err.message);
@@ -38,29 +59,60 @@ router.get('/', async (req, res) => {
     }
 });
 
-// New authors form
-router.get('/new', (req, res) => {
-    res.render('authors/new', {author: {}});
+router.get('/login', checkNotAuthentication, (req, res) => {
+    res.render('authors/login', {
+        author: {},
+    });
 });
 
-router.post('/', async (req, res) => {
+router.post('/login', passport.authenticate('local', {
+
+    failureRedirect: './login',
+    failureFlash: true,
+
+}), (req, res) => {
+    req.flash('messages', {'error': 'Log in successfully'});
+    res.redirect(`/authors/${req.user.ID}`);
+});
+
+router.get('/register', checkNotAuthentication, (req, res) => {
+    res.render('authors/register', {author: {}});
+})
+
+router.post('/register', async (req, res) => {
     try {
-        let newAuthor = await Author.create({
+        const author = await Author.create({
             name: req.body.name,
-            age: +req.body.age
+            email: req.body.email,
+            password: await bcrypt.hash(req.body.password, 10),
+            biography: req.body.biography,
+            age: req.body.age,
         });
-        console.log(newAuthor.toJSON());
-        res.redirect(`/authors/${newAuthor.ID}`);
+        req.flash('success', 'Successfully registered');
+        res.redirect('./login');
     } catch (err) {
-        res.render('authors/new', {
-            errorMessage: `Error while creating new author: ${err.message}`,
+        res.render('authors/register', {
             author: {
                 name: req.body.name,
-                age: +req.body.age
+                email: req.body.email,
+                password: req.body.password,
+                biography: req.body.biography,
+                age: req.body.age,
             }
-        });
+        })
     }
-});
+})
+
+router.delete('/logout', (req, res) => {
+    req.logOut(err => {
+        if (err) {
+            console.log(err);
+            return res.redirect('/');
+        }
+        req.flash('messages', {'info': 'Successfully logged out'});
+        res.redirect('./login');
+    });
+})
 
 router.route('/:id')
     .get(async (req, res) => {
@@ -74,8 +126,11 @@ router.route('/:id')
                 res.redirect('/authors');
             } else {
 
-                res.render('authors/profile', { author,
-                    books: await getAuthorBooks(author) });
+                res.render('authors/profile', {
+                    author,
+                    books: await getAuthorBooks(author),
+                    large: true,
+                });
             }
         } catch (err) {
             res.redirect('/authors');
@@ -97,17 +152,15 @@ router.route('/:id')
             }
 
         } catch (err) {
-
             res.render(`authors/${req.params.id}/edit`, {
                 errorMessage: `Error while editing new author: ${err.message}`,
                 author: {
                     name: req.body.name,
-                    age: +req.body.age
+                    age: +req.body.age,
                 }
             });
             res.redirect('/authors');
         }
-
     })
     .delete(async (req, res) => {
         let author;
@@ -120,7 +173,7 @@ router.route('/:id')
             if (author !== null) {
                 const books = await getAuthorBooks(author);
                 if (books.length) {
-                    res.render('authors/index', {
+                    return res.render('authors/index', {
                         authors: await Author.findAll(),
                         pattern: req.query.pattern,
                         errorMessage: 'Can not delete author with books',
@@ -141,6 +194,7 @@ router.get('/:id/edit', async (req, res) => {
             ID: req.params.id,
         }
     });
+    console.log(author.toJSON());
     res.render('authors/edit', {author});
 });
 
@@ -157,5 +211,6 @@ async function getAuthorBooks(author) {
         return [];
     }
 }
+
 
 module.exports = router;

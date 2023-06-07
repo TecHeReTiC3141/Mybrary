@@ -16,13 +16,16 @@
 
     <script defer src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
     <script defer src="/js/fileUpload.js"></script>
+    <script defer src="/js/confirmDanger.js"></script>
     <link id="main-css" rel="stylesheet" href="/stylesheets/main.css" type="text/css">
     <title>Mybrary</title>
 </head>
 <body>
     <div class="container">
         <%- include('../partials/header.ejs') %>
+
         <div class="content">
+            <%- include('../partials/showMessages.ejs') %>
             <%- include('../partials/errorMessage.ejs') %>
             <%- body %>
         </div>

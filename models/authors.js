@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
-const connection = require('../dbService');
+const connection = require('../utils/getSequelizeInstance');
 const { DataTypes } = require('sequelize');
 
 const Author = connection.define('author', {
@@ -20,9 +20,23 @@ const Author = connection.define('author', {
         trim: true,
 
     },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+
+    biography: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
+
     age: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
 });
 //

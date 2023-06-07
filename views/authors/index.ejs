@@ -13,12 +13,12 @@
 
 <ul class="authors">
     <% authors.forEach(author => { %>
-        <li>
+        <li class="author">
             <p class="author-name"><%= author.name %></p>
             <div class="btn-row">
                 <a class="btn btn-primary" href="/authors/<%= author.ID %>">View</a>
-                <a class="btn btn-primary" href="/authors/<%= author.ID %>/edit">Edit</a>
-                <%- include('../partials/deleteForm', { url: `/authors/${author.ID}` }) %>
+<!--                <a class="btn btn-primary" href="/authors/<%= author.ID %>/edit">Edit</a>-->
+<!--                <%- include('../partials/deleteForm', { url: `/authors/${author.ID}` }) %>-->
             </div>
         </li>
     <% }) %>

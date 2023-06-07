@@ -1,0 +1,11 @@
+<% for (let mess of messages) { %>
+    <% if ('info' in mess) { %>
+        <div class="mes info"><%= mess.info %></div>
+    <% } %>
+    <% if ('error' in mess) { %>
+        <div class="mes error"><%= mess.error %></div>
+    <% } %>
+    <% if ('success' in mess) { %>
+        <div class="mes success"><%= mess.success %></div>
+    <% } %>
+<% } %>

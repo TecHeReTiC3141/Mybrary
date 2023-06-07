@@ -3,9 +3,13 @@ const express = require('express');
 const router = express.Router();
 const Author = require('../models/authors');
 const Book = require('../models/books');
+const Marks = require('../models/marks');
 const {Sequelize, Op} = require('sequelize');
 
-const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif',]
+const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif',];
+
+const { checkAuthentication, checkNotAuthentication } = require('../utils/middleware');
+
 
 // Get all books
 router.get('/', async (req, res) => {
@@ -58,6 +62,7 @@ router.get('/', async (req, res) => {
                 searchOptions,
                 books,
                 entriesCol: books.length,
+
             });
     } catch (err) {
         res.render('index', {
@@ -67,7 +72,7 @@ router.get('/', async (req, res) => {
 });
 
 // New books form
-router.get('/new', async (req, res) => {
+router.get('/new', checkAuthentication, async (req, res) => {
     await CreateBookFormPage(
         {
             res,
@@ -123,7 +128,6 @@ router.get('/:id/edit', async (req, res) => {
     } catch (err) {
         res.redirect('/books')
     }
-
 })
 
 router.route('/:id')
@@ -135,15 +139,11 @@ router.route('/:id')
                 },
                 include: Author
             });
+
             if (book === null) {
-                const books = await Book.findAll();
-                res.render('books/index',
-                    {
-                        searchOptions: {},
-                        books,
-                        entriesCol: books.length,
-                        errorMessage: 'No such book',
-                    });
+                req.flash("messages",  {'error': 'No such book'});
+                res.redirect('/books');
+
             } else {
                 res.render('books/show', {book});
             }
@@ -160,6 +160,7 @@ router.route('/:id')
                 }
             });
             if (book === null) {
+                req.flash("messages",  {'error': 'No such book'});
                 res.redirect('/books');
             } else {
                 await book.update(req.body);

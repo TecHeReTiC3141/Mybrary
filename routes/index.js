@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const Book  = require('../models/books');
+const Book = require('../models/books');
 
 router.get('/', async (req, res) => {
     let books;
@@ -16,10 +16,11 @@ router.get('/', async (req, res) => {
         });
 
     } catch (err) {
-        console.log(err.message);
         books = [];
     }
-    res.render('index', {books});
+    res.render('index', {
+        books
+    });
 });
 
 module.exports = router;

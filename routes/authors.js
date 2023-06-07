@@ -4,7 +4,7 @@ const Author = require('../models/authors');
 const Book = require('../models/books');
 const bcrypt = require('bcrypt');
 
-const { checkAuthentication, checkNotAuthentication } = require('../utils/middleware');
+const {checkAuthentication, checkNotAuthentication} = require('../utils/middleware');
 
 const passport = require('passport');
 const initialize = require('../utils/initiatePassport');
@@ -20,13 +20,13 @@ const initialize = require('../utils/initiatePassport');
             where: {
                 id,
             }
-        })).toJSON(),
+        })).toJSON()
+        ,
     );
 })();
 
 const {Sequelize, Op} = require('sequelize');
 
-// Get all authors
 router.get('/', async (req, res) => {
     try {
         let authors;
@@ -66,11 +66,14 @@ router.get('/login', checkNotAuthentication, (req, res) => {
 });
 
 router.post('/login', passport.authenticate('local', {
-    successRedirect: '/',
+
     failureRedirect: './login',
     failureFlash: true,
 
-}));
+}), (req, res) => {
+    req.flash('messages', {'error': 'Log in successfully'});
+    res.redirect(`/authors/${req.user.ID}`);
+});
 
 router.get('/register', checkNotAuthentication, (req, res) => {
     res.render('authors/register', {author: {}});
@@ -106,11 +109,10 @@ router.delete('/logout', (req, res) => {
             console.log(err);
             return res.redirect('/');
         }
-        req.flash('info',  'Successfully logged out' );
+        req.flash('messages', {'info': 'Successfully logged out'});
         res.redirect('./login');
-    })
+    });
 })
-
 
 router.route('/:id')
     .get(async (req, res) => {
@@ -127,6 +129,7 @@ router.route('/:id')
                 res.render('authors/profile', {
                     author,
                     books: await getAuthorBooks(author),
+                    large: true,
                 });
             }
         } catch (err) {
@@ -158,7 +161,6 @@ router.route('/:id')
             });
             res.redirect('/authors');
         }
-
     })
     .delete(async (req, res) => {
         let author;
@@ -171,7 +173,7 @@ router.route('/:id')
             if (author !== null) {
                 const books = await getAuthorBooks(author);
                 if (books.length) {
-                    res.render('authors/index', {
+                    return res.render('authors/index', {
                         authors: await Author.findAll(),
                         pattern: req.query.pattern,
                         errorMessage: 'Can not delete author with books',
@@ -192,10 +194,9 @@ router.get('/:id/edit', async (req, res) => {
             ID: req.params.id,
         }
     });
+    console.log(author.toJSON());
     res.render('authors/edit', {author});
 });
-
-
 
 async function getAuthorBooks(author) {
     try {

@@ -3,7 +3,9 @@
 <%- include('../partials/renderAuthor') %>
 <h3 class="page-header">Books by author</h3>
 <% if (books.length) { %>
-    <%- include('../partials/renderBookGrid', { books }) %>
+    <div class="books">
+        <%- include('../partials/renderBookGrid', { books }) %>
+    </div>
 <% } else { %>
-    <p>Still no books </p>
+    <p>No books yet </p>
 <% } %>

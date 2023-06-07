@@ -126,7 +126,6 @@ router.get('/:id/edit', async (req, res) => {
     } catch (err) {
         res.redirect('/books')
     }
-
 })
 
 router.route('/:id')
@@ -138,12 +137,13 @@ router.route('/:id')
                 },
                 include: Author
             });
+
             if (book === null) {
-                const books = await Book.findAll();
-                req.flash('error',  'No such book');
+                req.flash("messages",  {'error': 'No such book'});
                 res.redirect('/books');
 
             } else {
+                console.log(book.author);
                 res.render('books/show', {book});
             }
 
@@ -159,7 +159,7 @@ router.route('/:id')
                 }
             });
             if (book === null) {
-                req.flash('error',  'No such book');
+                req.flash("messages",  {'error': 'No such book'});
                 res.redirect('/books');
             } else {
                 await book.update(req.body);

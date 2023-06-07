@@ -6,8 +6,10 @@
              src="<%= book.coverImagePath %>" alt="<% book.title %>">
 
         <div class="books-details-btn-grid">
-            <a class="btn btn-primary" href="/books/<%= book.ID %>/edit">Edit</a>
-            <%- include('../partials/deleteForm', { url: `/books/${book.ID}`}) %>
+            <% if (book.authorID === user?.ID) {%>
+                <a class="btn btn-primary" href="/books/<%= book.ID %>/edit">Edit</a>
+                <%- include('../partials/deleteForm', { url: `/books/${book.ID}`}) %>
+            <% } %>
             <a class="btn btn-primary book-details-view-author" href="/authors/<%= book.authorID %>">View author</a>
         </div>
         </div>

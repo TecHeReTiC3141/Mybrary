@@ -66,7 +66,6 @@ app.use(function(req,res,next){
 
 app.use(function(req, res, next) {
     res.locals.messages = req.flash('messages') || [];
-    console.log(res.locals.messages);
     next();
 });
 
@@ -78,7 +77,6 @@ app.listen(process.env.PORT || 3000,
     () => console.log('On http://localhost:3000'));
 
 /*
-* TODO: 1. Book can be only edited and deleted by author;
 * TODO: 2. Other users can leave a mark to book;
 * TODO: 3. On the book profile there are amount of mark and mean of them (rating);
 * TODO: 4. Books can be sorted by rating

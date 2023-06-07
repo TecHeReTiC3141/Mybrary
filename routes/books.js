@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Author = require('../models/authors');
 const Book = require('../models/books');
+const Marks = require('../models/marks');
 const {Sequelize, Op} = require('sequelize');
 
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif',];
@@ -61,6 +62,7 @@ router.get('/', async (req, res) => {
                 searchOptions,
                 books,
                 entriesCol: books.length,
+
             });
     } catch (err) {
         res.render('index', {
@@ -143,7 +145,6 @@ router.route('/:id')
                 res.redirect('/books');
 
             } else {
-                console.log(book.author);
                 res.render('books/show', {book});
             }
 

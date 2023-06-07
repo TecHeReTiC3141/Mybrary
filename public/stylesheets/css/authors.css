@@ -7,6 +7,13 @@
     justify-content: space-between;
     margin-bottom: 1em;
     align-items: center;
+    padding-bottom: .5em;
+    border-bottom: 2px solid var(--color-text-light);
+}
+
+.authors li:last-child {
+    border-bottom: none
+
 }
 
 .author-name {

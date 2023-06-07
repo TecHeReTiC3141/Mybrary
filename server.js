@@ -24,7 +24,7 @@ sequelize.authenticate()
     .catch(err => console.log(`Error while connecting: ${err.message}`));
 
 
-sequelize.sync()
+sequelize.sync( {alter: true })
     .then(() => console.log("All models were synchronized successfully."));
 
 app.set('view engine', 'ejs');

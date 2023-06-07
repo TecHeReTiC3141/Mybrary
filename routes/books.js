@@ -3,13 +3,12 @@ const express = require('express');
 const router = express.Router();
 const Author = require('../models/authors');
 const Book = require('../models/books');
-const Marks = require('../models/marks');
+const Mark = require('../models/mark');
 const {Sequelize, Op} = require('sequelize');
 
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif',];
 
 const { checkAuthentication, checkNotAuthentication } = require('../utils/middleware');
-
 
 // Get all books
 router.get('/', async (req, res) => {
@@ -202,9 +201,15 @@ router.route('/:id')
 
 router.post('/:id/mark', checkAuthentication, async (req, res) => {
    try {
-        console.log(req.body.rating);
+        const mark = await Mark.create({
+            BookId: req.params.id,
+            AuthorId: req.user.ID,
+            mark: req.body.rating,
+        });
+
         res.redirect(`/books/${req.params.id}`);
    } catch (err) {
+       console.log(err.message);
        res.redirect(`/books/${req.params.id}`);
    }
 });

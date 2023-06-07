@@ -74,3 +74,8 @@
     display: block;
 }
 
+.leave-mark button[type="submit"] {
+    position: relative;
+
+    bottom: .6rem;
+}

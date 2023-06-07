@@ -6,13 +6,13 @@
              src="<%= book.coverImagePath %>" alt="<% book.title %>">
 
         <div class="books-details-btn-grid">
-            <% if (book.authorID === user?.ID) {%>
+            <% if (book.authorID === user?.ID) { %>
                 <a class="btn btn-primary" href="/books/<%= book.ID %>/edit">Edit</a>
                 <%- include('../partials/deleteForm', { url: `/books/${book.ID}`}) %>
             <% } %>
             <a class="btn btn-primary book-details-view-author" href="/authors/<%= book.authorID %>">View author</a>
         </div>
-        </div>
+    </div>
 
     <div class="book-info-grid">
         <div class="book-details-label">Author:</div>
@@ -23,5 +23,24 @@
         <div><%= book.pageCount %></div>
         <div class="book-details-label">Description:</div>
         <div><%= (book.description ? book.description : 'No description') %></div>
+
+        <% if (book.authorID !== user?.ID) { %>
+            <div class="leave-mark">
+                <h2>Give the book a rating</h2>
+                <form action="/books/<%= book.ID%>/mark" method="POST">
+                    <div class="star-rating">
+                        <input type="radio" name="rating" value="1"><i></i>
+                        <input type="radio" name="rating" value="2"><i></i>
+                        <input type="radio" name="rating" value="3"><i></i>
+                        <input type="radio" name="rating" value="4"><i></i>
+                        <input type="radio" name="rating" value="5"><i></i>
+                    </div>
+
+                    <br>
+                    <button type="submit" class="btn btn-primary">Give</button>
+                </form>
+            </div>
+        <% } %>
+
     </div>
 </div>

@@ -198,7 +198,16 @@ router.route('/:id')
                 res.redirect('/books');
             }
         }
-    })
+    });
+
+router.post('/:id/mark', checkAuthentication, async (req, res) => {
+   try {
+        console.log(req.body.rating);
+        res.redirect(`/books/${req.params.id}`);
+   } catch (err) {
+       res.redirect(`/books/${req.params.id}`);
+   }
+});
 
 async function saveCover(book, coverEncoded) {
     if (!coverEncoded) return;
@@ -208,7 +217,6 @@ async function saveCover(book, coverEncoded) {
         book.coverImageType = cover.type;
         await book.save();
     }
-
 }
 
 async function CreateBookFormPage({res, book, form, error = null}) {

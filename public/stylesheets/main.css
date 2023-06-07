@@ -5,6 +5,7 @@
 @import 'css/forms.css';
 @import 'css/authors.css';
 @import 'css/books.css';
+@import 'css/marks.css';
 
 :root {
     font-family: 'Gotham Rounded', sans-serif;

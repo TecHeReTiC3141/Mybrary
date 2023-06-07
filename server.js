@@ -80,5 +80,5 @@ app.listen(process.env.PORT || 3000,
 * TODO: 2. Other users can leave a mark to book;
 * TODO: 3. On the book profile there are amount of mark and mean of them (rating);
 * TODO: 4. Books can be sorted by rating
-* TODO:
+* TODO: Book can be created with some tags (genre, type (thrilling, to sleep) and etc.)
 * */

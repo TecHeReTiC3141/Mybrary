@@ -29,14 +29,13 @@
                 <h2>Give the book a rating</h2>
                 <form action="/books/<%= book.ID%>/mark" method="POST">
                     <div class="star-rating">
-                        <input type="radio" name="rating" value="1"><i></i>
-                        <input type="radio" name="rating" value="2"><i></i>
-                        <input type="radio" name="rating" value="3"><i></i>
-                        <input type="radio" name="rating" value="4"><i></i>
-                        <input type="radio" name="rating" value="5"><i></i>
+                         <% for (let i = 1; i <= 5; ++i) { %>
+                            <input type="radio" name="rating" <%= (i === mark ? 'checked' : '') %>
+                                   value="<%= i %>"><i></i>
+                        <% } %>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Give</button>
+                    <button type="submit" class="btn btn-primary"><%= (mark ? 'Change' : 'Give') %></button>
                 </form>
             </div>
         <% } %>

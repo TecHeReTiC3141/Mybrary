@@ -43,7 +43,7 @@
     position: relative;
 }
 
-.star-rating input:hover + i,
+.star-rating input:not([disabled]):hover + i,
 .star-rating input:checked + i {
     opacity: 1;
 }
@@ -76,6 +76,5 @@
 
 .leave-mark button[type="submit"] {
     position: relative;
-
     bottom: .6rem;
 }

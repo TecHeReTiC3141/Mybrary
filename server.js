@@ -77,7 +77,6 @@ app.listen(process.env.PORT || 3000,
     () => console.log('On http://localhost:3000'));
 
 /*
-* TODO: 4. Books can be sorted by rating
 * TODO: Book can be created with some tags (genre, type (thrilling, to sleep) and etc.)
 * TODO: Make footer
 * */

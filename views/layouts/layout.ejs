@@ -22,7 +22,10 @@
 </head>
 <body>
     <div class="container">
-        <%- include('../partials/header.ejs') %>
+        <header>
+            <%- include('../partials/header.ejs') %>
+        </header>
+
 
         <div class="content">
             <%- include('../partials/showMessages.ejs') %>
@@ -30,7 +33,9 @@
             <%- body %>
         </div>
 
-        <footer>Footer</footer>
+        <footer>
+            <%- include('../partials/footer.ejs') %>
+        </footer>
     </div>
 
 

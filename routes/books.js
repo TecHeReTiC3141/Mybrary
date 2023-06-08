@@ -16,6 +16,7 @@ router.get('/', async (req, res) => {
     const where = {
         [Op.and]: []
     };
+    const order = [];
     let symbols = Object.getOwnPropertySymbols(where);
 
 
@@ -47,6 +48,10 @@ router.get('/', async (req, res) => {
         )
     }
 
+    if (req.query.sortByRating) {
+        order.push(['rating', 'DESC']);
+    }
+
     try {
         let searchOptions = {
             title: req.query.title,
@@ -54,7 +59,8 @@ router.get('/', async (req, res) => {
             publishedBefore: req.query.publishedBefore,
         }
         const books = await Book.findAll({
-            where
+            where,
+            order,
         });
         res.render('books/index',
             {
@@ -138,24 +144,23 @@ router.route('/:id')
                 },
                 include: Author
             });
-
             if (book === null) {
                 req.flash("messages", {'error': 'No such book'});
                 res.redirect('/books');
-
             } else {
                 let mark = null;
                 if (req.isAuthenticated()) {
                     mark = await Mark.findOne({
                         where: {
                             [Op.and]: [
-                                { AuthorId: req.user.ID, },
-                                { BookId: req.params.id, },
+                                {AuthorId: req.user.ID,},
+                                {BookId: req.params.id,},
                             ],
                         }
                     })
                 }
-                res.render('books/show', {book, mark: mark?.mark });
+                const {sum: rating_sum, count: rating_col } = await getBookMarks(req.params.id);
+                res.render('books/show', {book, mark: mark?.mark, rating_col, rating_sum });
             }
 
         } catch (err) {
@@ -231,6 +236,15 @@ router.post('/:id/mark', checkAuthentication, async (req, res) => {
                 mark: req.body.rating,
             })
         }
+        const {sum: rating_sum, count: rating_col } = await getBookMarks(req.params.id);
+        const book = await Book.findOne({
+            where: {
+                ID: req.params.id,
+            }
+        });
+        book.update({
+            rating: rating_sum / rating_col,
+        })
 
         res.redirect(`/books/${req.params.id}`);
     } catch (err) {
@@ -264,11 +278,18 @@ async function CreateBookFormPage({res, book, form, error = null}) {
 }
 
 async function getBookMarks(bookId) {
-    return await Mark.findAll({
-        where: {
-            BookId: bookId,
-        }
-    });
+    return {
+        'count': await Mark.count({
+            where: {
+                BookId: bookId,
+            }
+        }),
+        'sum': await Mark.sum('mark', {
+            where: {
+                BookId: bookId,
+            }
+        }),
+    };
 }
 
 module.exports = router;

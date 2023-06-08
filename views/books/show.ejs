@@ -23,6 +23,9 @@
         <div><%= book.pageCount %></div>
         <div class="book-details-label">Description:</div>
         <div><%= (book.description ? book.description : 'No description') %></div>
+        <div class="book-details-label">Rating:</div>
+        <div><%= (rating_col > 0 ?
+                    `${Number((rating_sum / rating_col).toFixed(1))}/5 based on ${rating_col} reviews` : 'No reviews yet') %></div>
 
         <% if (book.authorID !== user?.ID) { %>
             <div class="leave-mark">

@@ -15,12 +15,17 @@ body, html {
     height: 100%;
     background-image: linear-gradient(to right,
     var(--color-background-dark),  var(--color-background-light));
+    position: relative;
 }
 
 .container {
     max-width: 75em;
+    min-width: 45em;
+    height: 100%;
     margin: auto;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
+    position: relative;
+    width: 100%;
 }
 
 .content {
@@ -34,4 +39,11 @@ body, html {
 
 .error-message {
     color: hsl(var(--color-danger-hue), 100%, 50%);
+}
+
+.wrapper {
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    position: relative;
 }

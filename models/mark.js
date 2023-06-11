@@ -7,7 +7,7 @@ const Book = require('./books');
 const Author = require('./authors');
 const {DataTypes} = require("sequelize");
 
-const Marks = connection.define('Marks', {
+const Mark = connection.define('Marks', {
     AuthorId: {
         type: DataTypes.INTEGER,
         references: {
@@ -28,7 +28,7 @@ const Marks = connection.define('Marks', {
     }
 });
 
-Book.belongsToMany(Author, { through: Marks });
-Author.belongsToMany(Book, { through: Marks });
+Book.belongsToMany(Author, { through: Mark, foreignKey: 'BookId' });
+Author.belongsToMany(Book, { through: Mark, foreignKey: 'AuthorId' });
 
-module.exports = Marks;
+module.exports = Mark;

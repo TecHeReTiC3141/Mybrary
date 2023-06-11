@@ -24,7 +24,7 @@ sequelize.authenticate()
     .catch(err => console.log(`Error while connecting: ${err.message}`));
 
 
-sequelize.sync()
+sequelize.sync( {alter: true })
     .then(() => console.log("All models were synchronized successfully."));
 
 app.set('view engine', 'ejs');
@@ -77,8 +77,6 @@ app.listen(process.env.PORT || 3000,
     () => console.log('On http://localhost:3000'));
 
 /*
-* TODO: 2. Other users can leave a mark to book;
-* TODO: 3. On the book profile there are amount of mark and mean of them (rating);
-* TODO: 4. Books can be sorted by rating
-* TODO:
+* TODO: Book can be created with some tags (genre, type (thrilling, to sleep) and etc.)
+* TODO: Make footer
 * */

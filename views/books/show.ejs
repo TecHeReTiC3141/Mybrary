@@ -6,13 +6,13 @@
              src="<%= book.coverImagePath %>" alt="<% book.title %>">
 
         <div class="books-details-btn-grid">
-            <% if (book.authorID === user?.ID) {%>
+            <% if (book.authorID === user?.ID) { %>
                 <a class="btn btn-primary" href="/books/<%= book.ID %>/edit">Edit</a>
                 <%- include('../partials/deleteForm', { url: `/books/${book.ID}`}) %>
             <% } %>
             <a class="btn btn-primary book-details-view-author" href="/authors/<%= book.authorID %>">View author</a>
         </div>
-        </div>
+    </div>
 
     <div class="book-info-grid">
         <div class="book-details-label">Author:</div>
@@ -23,5 +23,25 @@
         <div><%= book.pageCount %></div>
         <div class="book-details-label">Description:</div>
         <div><%= (book.description ? book.description : 'No description') %></div>
+        <div class="book-details-label">Rating:</div>
+        <div><%= (rating_col > 0 ?
+                    `${Number((rating_sum / rating_col).toFixed(1))}/5 based on ${rating_col} reviews` : 'No reviews yet') %></div>
+
+        <% if (book.authorID !== user?.ID) { %>
+            <div class="leave-mark">
+                <h2>Give the book a rating</h2>
+                <form action="/books/<%= book.ID%>/mark" method="POST">
+                    <div class="star-rating">
+                         <% for (let i = 1; i <= 5; ++i) { %>
+                            <input type="radio" name="rating" <%= (i === mark ? 'checked' : '') %>
+                                   value="<%= i %>"><i></i>
+                        <% } %>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary"><%= (mark ? 'Change' : 'Give') %></button>
+                </form>
+            </div>
+        <% } %>
+
     </div>
 </div>

@@ -52,6 +52,10 @@ const Book = connection.define('book', {
                 ${this.coverImage.toString('base64')}`
             }
         }
+    },
+    rating: {
+        type: DataTypes.FLOAT,
+        defaultValue: 0,
     }
 });
 

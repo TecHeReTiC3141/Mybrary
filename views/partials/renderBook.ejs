@@ -1,0 +1,19 @@
+<div class="book-card">
+    <h4><%= book.title %> </h4>
+    <a href="/books/<%= book.ID %>">
+        <img class="<%= bookCoverClass %>"
+             src="<%= book.coverImagePath %>" alt="<% book.title %>">
+    </a>
+    <div class="book-card-info">
+        <%= book.description %>
+        <form action="">
+            <div class="star-rating">
+                <% for (let i = 1; i <= 5; ++i) { %>
+                    <input type="radio" name="rating" disabled <%= (i === Math.round(book.rating)
+                            ? 'checked' : '') %> value="<%= i %>"><i></i>
+                <% } %>
+            </div>
+    </div>
+        </form>
+
+</div>

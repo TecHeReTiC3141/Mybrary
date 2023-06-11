@@ -3,13 +3,12 @@ const express = require('express');
 const router = express.Router();
 const Author = require('../models/authors');
 const Book = require('../models/books');
-const Marks = require('../models/marks');
+const Mark = require('../models/mark');
 const {Sequelize, Op} = require('sequelize');
 
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif',];
 
-const { checkAuthentication, checkNotAuthentication } = require('../utils/middleware');
-
+const {checkAuthentication, checkNotAuthentication} = require('../utils/middleware');
 
 // Get all books
 router.get('/', async (req, res) => {
@@ -17,6 +16,7 @@ router.get('/', async (req, res) => {
     const where = {
         [Op.and]: []
     };
+    const order = [];
     let symbols = Object.getOwnPropertySymbols(where);
 
 
@@ -48,6 +48,10 @@ router.get('/', async (req, res) => {
         )
     }
 
+    if (req.query.sortByRating) {
+        order.push(['rating', 'DESC']);
+    }
+
     try {
         let searchOptions = {
             title: req.query.title,
@@ -55,7 +59,8 @@ router.get('/', async (req, res) => {
             publishedBefore: req.query.publishedBefore,
         }
         const books = await Book.findAll({
-            where
+            where,
+            order,
         });
         res.render('books/index',
             {
@@ -139,13 +144,23 @@ router.route('/:id')
                 },
                 include: Author
             });
-
             if (book === null) {
-                req.flash("messages",  {'error': 'No such book'});
+                req.flash("messages", {'error': 'No such book'});
                 res.redirect('/books');
-
             } else {
-                res.render('books/show', {book});
+                let mark = null;
+                if (req.isAuthenticated()) {
+                    mark = await Mark.findOne({
+                        where: {
+                            [Op.and]: [
+                                {AuthorId: req.user.ID,},
+                                {BookId: req.params.id,},
+                            ],
+                        }
+                    })
+                }
+                const {sum: rating_sum, count: rating_col } = await getBookMarks(req.params.id);
+                res.render('books/show', {book, mark: mark?.mark, rating_col, rating_sum });
             }
 
         } catch (err) {
@@ -160,7 +175,7 @@ router.route('/:id')
                 }
             });
             if (book === null) {
-                req.flash("messages",  {'error': 'No such book'});
+                req.flash("messages", {'error': 'No such book'});
                 res.redirect('/books');
             } else {
                 await book.update(req.body);
@@ -198,7 +213,45 @@ router.route('/:id')
                 res.redirect('/books');
             }
         }
-    })
+    });
+
+router.post('/:id/mark', checkAuthentication, async (req, res) => {
+    let mark;
+    try {
+        mark = await Mark.findOne({
+            where: {
+                BookId: req.params.id,
+                AuthorId: req.user.ID,
+            },
+
+        });
+        if (mark === null) {
+            mark = await Mark.create({
+                BookId: req.params.id,
+                AuthorId: req.user.ID,
+                mark: req.body.rating,
+            });
+        } else {
+            mark.update({
+                mark: req.body.rating,
+            })
+        }
+        const {sum: rating_sum, count: rating_col } = await getBookMarks(req.params.id);
+        const book = await Book.findOne({
+            where: {
+                ID: req.params.id,
+            }
+        });
+        book.update({
+            rating: rating_sum / rating_col,
+        })
+
+        res.redirect(`/books/${req.params.id}`);
+    } catch (err) {
+        console.log(err);
+        res.redirect(`/books/${req.params.id}`);
+    }
+});
 
 async function saveCover(book, coverEncoded) {
     if (!coverEncoded) return;
@@ -208,7 +261,6 @@ async function saveCover(book, coverEncoded) {
         book.coverImageType = cover.type;
         await book.save();
     }
-
 }
 
 async function CreateBookFormPage({res, book, form, error = null}) {
@@ -223,6 +275,21 @@ async function CreateBookFormPage({res, book, form, error = null}) {
     } catch (err) {
         res.redirect('/books');
     }
+}
+
+async function getBookMarks(bookId) {
+    return {
+        'count': await Mark.count({
+            where: {
+                BookId: bookId,
+            }
+        }),
+        'sum': await Mark.sum('mark', {
+            where: {
+                BookId: bookId,
+            }
+        }),
+    };
 }
 
 module.exports = router;

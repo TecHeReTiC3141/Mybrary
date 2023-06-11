@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const Book = require('../models/books');
+const Author = require("../models/authors");
 
 router.get('/', async (req, res) => {
     let books;

@@ -2,8 +2,10 @@ const express = require('express');
 
 const router = express.Router();
 const Author = require('../models/authors');
+const Genre = require('../models/genre');
 const Book = require('../models/books');
 const Mark = require('../models/mark');
+
 const {Sequelize, Op} = require('sequelize');
 
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif',];

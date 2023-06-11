@@ -78,5 +78,9 @@ app.listen(process.env.PORT || 3000,
 
 /*
 * TODO: Book can be created with some tags (genre, type (thrilling, to sleep) and etc.)
-* TODO: Make footer
+* TODO: Add genres to book
+* TODO: Genres will have name and unique icon stored in db;
+* TODO: Book will have only one genre ;
+* TODO: Books can be sorted based on genres;
+*
 * */

@@ -1,0 +1,12 @@
+@import '../shared/variables.css';
+
+footer {
+    margin-top: 1em;
+    text-align: center;
+    padding: 1em 0;
+    background-color: var(--color-text-light);
+    color: var(--color-background-dark);
+    position: absolute;
+    bottom: 0;
+    width: min(75em, 100%);
+}

@@ -19,8 +19,10 @@ body, html {
 
 .container {
     max-width: 75em;
+    height: 100%;
     margin: auto;
     margin-bottom: 2rem;
+    position: relative;
 }
 
 .content {

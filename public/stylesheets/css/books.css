@@ -68,7 +68,7 @@
 .book-details-label {
     font-size: 1.2rem;
     font-weight: 500;
-    align-self: flex-start;
+    align-self: center;
 }
 
 .book-info-grid {
@@ -95,6 +95,13 @@
 .book-details-view-author {
     grid-area: author;
     justify-self: stretch;
+}
+
+.genre-info {
+    padding: .5rem;
+    background-color: cadetblue;
+    border: 2px solid black;
+    border-radius: 1.5rem;
 }
 
 

@@ -85,6 +85,7 @@ router.get('/new', checkAuthentication, async (req, res) => {
             res,
             book: {},
             form: 'new',
+
         });
 
 });
@@ -94,7 +95,8 @@ router.post('/', async (req, res) => {
     try {
         book = await Book.build({
             title: req.body.title,
-            authorID: req.body.author,
+            authorID: req.user.ID,
+            genreID: req.body.genre,
             publishDate: new Date(req.body.publishDate),
             pageCount: req.body.pageCount,
             description: req.body.description,
@@ -144,7 +146,7 @@ router.route('/:id')
                 where: {
                     ID: req.params.id,
                 },
-                include: Author
+                include: [Author, Genre],
             });
             if (book === null) {
                 req.flash("messages", {'error': 'No such book'});
@@ -268,7 +270,7 @@ async function saveCover(book, coverEncoded) {
 async function CreateBookFormPage({res, book, form, error = null}) {
     try {
         const params = {
-            authors: await Author.findAll(),
+            genres: await Genre.findAll(),
             book,
         }
         if (error) params.errorMessage =

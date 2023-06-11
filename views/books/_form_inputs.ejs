@@ -6,10 +6,11 @@
 
 
     <div class="form-item">
-        <label>Author:</label>
-        <select readonly="readonly" name="author">
-            <option selected label="<%= user.name %>" value="<%= user.ID %>">
-
+        <label>Genre:</label>
+        <select name="genre">
+            <% for (let genre of genres) { %>
+                <option label="<%= genre.name %>" value="<%= genre.ID %>">
+            <% } %>
         </select>
     </div>
 </div>

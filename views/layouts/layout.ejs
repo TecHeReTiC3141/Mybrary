@@ -6,7 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
+    <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet"/>
     <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
           rel="stylesheet"/>
 
@@ -17,7 +17,6 @@
     <script defer src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
     <script defer src="/js/fileUpload.js"></script>
     <script defer src="/js/confirmDanger.js"></script>
-    <link id="main-css" rel="stylesheet" href="/stylesheets/main.css" type="text/css">
 
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
@@ -27,9 +26,15 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
 
+    <script src="https://kit.fontawesome.com/c9b4448de0.js" crossorigin="anonymous"></script>
+    <link id="main-css" rel="stylesheet" href="/stylesheets/main.css" type="text/css">
+
     <title>Mybrary</title>
 </head>
 <body>
+
+<div class="wrapper">
+
     <div class="container">
         <header>
             <%- include('../partials/header.ejs') %>
@@ -42,10 +47,12 @@
             <%- body %>
         </div>
 
-        <footer>
-            <%- include('../partials/footer.ejs') %>
-        </footer>
+
     </div>
+    <footer>
+        <%- include('../partials/footer.ejs') %>
+    </footer>
+</div>
 
 
 </body>

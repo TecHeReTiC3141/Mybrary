@@ -22,10 +22,20 @@
 
         </div>
         <div class="form-item">
+            <label for="sortByGenre">Select your genre: </label>
+            <select name="sortByGenre" id="sortByGenre">
+                <option value="">
+                <% for (let genre of genres) { %>
+                    <option label="<%= genre.name %>" value="<%= genre.ID %>"></option>
+                <% }%>
+            </select>
+        </div>
+        <div class="form-item">
             <label for="sortByRating">Sort by rating: </label>
             <input type="checkbox" name="sortByRating" id="sortByRating">
-
         </div>
+
+
     </div>
 
     <div class="btn-row form-row form-row-end">

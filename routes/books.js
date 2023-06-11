@@ -50,6 +50,14 @@ router.get('/', async (req, res) => {
         )
     }
 
+    if (req.query.sortByGenre) {
+        where[symbols[0]].push({
+                genreID: req.query.sortByGenre,
+
+            }
+        )
+    }
+
     if (req.query.sortByRating) {
         order.push(['rating', 'DESC']);
     }
@@ -69,7 +77,7 @@ router.get('/', async (req, res) => {
                 searchOptions,
                 books,
                 entriesCol: books.length,
-
+                genres: await Genre.findAll(),
             });
     } catch (err) {
         res.render('index', {

@@ -17,6 +17,8 @@
     <div class="book-info-grid">
         <div class="book-details-label">Author:</div>
         <div> <%= book.author.name %></div>
+        <div class="book-details-label">Genre:</div>
+        <div class="genre-info"><i class="<%= book.genre.icon %>"></i> <%= book.genre.name %></div>
         <div class="book-details-label">Publish Date:</div>
         <div><%= book.publishDate.toDateString() %></div>
         <div class="book-details-label">Page Count:</div>
@@ -25,7 +27,7 @@
         <div><%= (book.description ? book.description : 'No description') %></div>
         <div class="book-details-label">Rating:</div>
         <div><%= (rating_col > 0 ?
-                    `${Number((rating_sum / rating_col).toFixed(1))}/5 based on ${rating_col} reviews` : 'No reviews yet') %></div>
+        `${Number((rating_sum / rating_col).toFixed(1))}/5 based on ${rating_col} reviews` : 'No reviews yet') %></div>
 
         <% if (book.authorID !== user?.ID) { %>
             <div class="leave-mark">

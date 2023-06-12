@@ -66,9 +66,4 @@ Author.hasMany(Book, {
 });
 Book.belongsTo(Author);
 
-//
-// Book.sync().then(() =>
-//     console.log("The table for the Book was just recreated!"));
-
-
 module.exports = Book;

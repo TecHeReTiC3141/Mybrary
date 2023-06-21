@@ -6,10 +6,11 @@ let sequelize;
 
 function initialize() {
     if (!sequelize) {
-        sequelize = new Sequelize(process.env.DATABASE, process.env.USER, process.env.PASSWORD,
+        sequelize = new Sequelize(process.env.DATABASE,
+            process.env.USER, process.env.PASSWORD,
             {
                 dialect: 'mysql',
-                host: 'localhost',
+                host: process.env.HOST,
                 logging: false,
             }
         );

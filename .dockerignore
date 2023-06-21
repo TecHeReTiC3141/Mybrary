@@ -1,3 +1,4 @@
 node_modules
 test_book_covers
 .env
+/db.env
